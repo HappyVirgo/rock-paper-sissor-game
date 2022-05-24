@@ -1,4 +1,4 @@
-# Rock Paper Scissors game command microservice
+# Rock Paper Scissors game microservices
 The Rock Paper Scissors game project provides infrastructure, REST and gRPC APIs for the Rock Paper Scissors game.
 ### Prerequisites
 * Java 11 or higher
