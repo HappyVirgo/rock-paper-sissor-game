@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <!--
+    Encrypting Maven credentials with Maven
+
+    1. Encrypt a “master” password:
+    mvn &#45;&#45;encrypt-master-password
+    Master password: <<type some random but lengthy string as input>>
+
+    2. Save the results in a file named settings-security.xml in your Maven home directory, i.e. ~/.m2/settings-security.xml.
+    Encrypt your GitHub Personal Token (PAT):
+    mvn &#45;&#45;encrypt-password
+    Password: <<your GitHub Personal Token>>
+
+    3. Update your settings.xml with the generated cipher.
+
+    4. CircleCI: Create MAVEN_SECURITY_PASSWORD environmental variable that contains your master password from the previous steps 1.
+    -->
+
+    <servers>
+        <server>
+            <id>docker.io</id>
+            <!-- Docker account username -->
+            <username>hokushin</username>
+            <!-- Docker account password -->
+            <password>{r4FBArVsajUHPYa12iI3HJr5qcX525myxqy3Yibvs+tOIPAtVnPTCYxoNt/E4B+bYn3VYiJCUJqHn3BnIPFMcw==}
+            </password>
+        </server>
+
+        <server>
+            <id>github</id>
+            <!-- GitHun account username -->
+            <username>hokushin118</username>
+            <!-- GitHub Personal Token -->
+            <password>{0/fnU7SXyuQHQFJ331nKfL6UTsTyUnZc5wpWhVenkyW7755DGVmEtHthcglaOiHZQXM90W6XyY9OaZHD6s7Fzw==}
+            </password>
+        </server>
+
+        <server>
+            <id>packagecloud.snapshots</id>
+            <!-- PackageCloud Token -->
+            <password>{vH9IQQ+bRKYHaXz0ANvAbF7DPRi/HjiKUgnWIz0N3ex+uXF4LzfU2QA/v60vsyC+U8Q5a0S/JOE/d6Cm8hxGgxdXmS0TvWstWPz+8NQ5g+8=}</password>
+        </server>
+    </servers>
+
+    <profiles>
+        <profile>
+            <id>github</id>
+            <repositories>
+                <!-- Maven Central Repository -->
+                <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <!-- GitHub Packages Repository -->
+                <repository>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/hokushin118/rps-microservices
+                    </url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+</settings>

@@ -1,0 +1,117 @@
+server:
+  compression:
+    enabled: true
+  servlet:
+    context-path: /api
+  tomcat:
+    threads:
+      max: 100
+  error:
+    # Includes error attribute to message response
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  profiles:
+    active: '@spring.profiles.active@'
+
+  main:
+    allow-bean-definition-overriding: true
+
+  autoconfigure:
+    # Excluding MongoDB
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration, org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+
+  jmx:
+    enabled: false
+
+  # Hibernate properties
+  jpa:
+    # Disable Open Session in View
+    open-in-view: false
+    hibernate:
+      # Naming strategy
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      generate_statistics: true
+
+  # Transaction properties
+  transaction:
+    # Transaction timeout (seconds)
+    default-timeout: 10
+
+  # Flyway configuration
+  flyway:
+    # Path to the migration scripts
+    locations: classpath:${spring.profiles.active}/db/migration/{vendor}
+
+  # Jackson properties
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      INDENT_OUTPUT: true
+    time-zone: UTC
+
+  # Kafka properties
+  kafka:
+    listener:
+      ack-mode: MANUAL_IMMEDIATE
+    consumer:
+      # consumer group id
+      group-id: score-consumer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: 'com.al.qdt.common.events.*'
+
+# Actuator configuration
+management:
+  # context path  /api/actuator
+  server:
+    base-path: ${server.servlet.context-path}
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        # exposing endpoints
+        include: prometheus
+  info:
+    git:
+      mode: full
+
+# Open Api 3.0 configuration
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    use-root-path: true
+  # packages to include
+  packages-to-scan: com.al.qdt.score.qry.api
+  # enables pretty-printed output of the OpenApi specification
+  writer-with-default-pretty-printer: true
+
+api:
+  dev:
+    server:
+      description: Dev server
+      base-url: http://localhost:8083${server.servlet.context-path}
+  prod:
+    server:
+      description: Prod server
+      base-url: http://localhost:8080${server.servlet.context-path}
+  endpoint-scores: scores
+  version-one: /v1
+  version-two: /v2
+  license-name: The GNU General Public License, Version 3
+  license-url: https://www.gnu.org/licenses/gpl-3.0.txt

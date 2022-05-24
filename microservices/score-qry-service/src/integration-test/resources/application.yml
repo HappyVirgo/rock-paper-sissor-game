@@ -1,0 +1,32 @@
+server:
+  servlet:
+    context-path: /api
+
+# gRPC client test configuration
+grpc:
+  client:
+    GLOBAL:
+      negotiation-type: plaintext
+      address: static://localhost:${grpc.server.port}
+
+spring:
+  # Kafka properties
+  kafka:
+    consumer:
+      # score group id
+      group-id: score-consumer
+
+api:
+  dev:
+    server:
+      description: Dev server
+      base-url: http://localhost:8083${server.servlet.context-path}
+  prod:
+    server:
+      description: Prod server
+      base-url: http://localhost:8080${server.servlet.context-path}
+  endpoint-scores: scores
+  version-one: /v1
+  version-two: /v2
+  license-name: The GNU General Public License, Version 3
+  license-url: https://www.gnu.org/licenses/gpl-3.0.txt

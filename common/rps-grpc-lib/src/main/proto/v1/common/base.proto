@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package v1.common;
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.common";
+option java_outer_classname = "BaseProtos";
+option java_multiple_files = true;
+
+/* The message definition of the base response data. */
+message BaseResponseDto {
+  string message = 1 [json_name = "message"]; // message
+}

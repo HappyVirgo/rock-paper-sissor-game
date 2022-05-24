@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package v1.services;
+
+import "v1/dto/game.proto";
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.services";
+option java_outer_classname = "RpsQryBaseService";
+option java_multiple_files = true;
+
+/* The message definition of the request for all games. */
+message ListOfGamesRequest {
+}
+
+/* The message definition of the list of games. */
+message ListOfGamesResponse {
+  repeated v1.dto.GameDto games = 1 [json_name = "games"]; // list of games
+}
+
+/* The rps query service definition. */
+service RpsQryService {
+
+  /*
+  * Returns all games unary rpc service.
+  */
+  rpc listOfGames(ListOfGamesRequest) returns (ListOfGamesResponse) {};
+}

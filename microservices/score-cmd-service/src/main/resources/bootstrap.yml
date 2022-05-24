@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: score-cmd-service

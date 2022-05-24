@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package v1.common;
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.common";
+option java_outer_classname = "PlayerProtos";
+option java_multiple_files = true;
+
+/**
+ * This enum contains Rock Paper Scissors game round result values.
+ */
+enum Player {
+  UNKNOWN = 0;
+  USER = 1;
+  MACHINE = 2;
+  DRAW = 3;
+}

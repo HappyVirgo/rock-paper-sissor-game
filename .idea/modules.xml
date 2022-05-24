@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common/cqrs-es-framework/cqrs-es-framework.iml" filepath="$PROJECT_DIR$/common/cqrs-es-framework/cqrs-es-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/microservices/rps-cmd-service/rps-cmd-service.iml" filepath="$PROJECT_DIR$/microservices/rps-cmd-service/rps-cmd-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/rps-common-lib/rps-common-lib.iml" filepath="$PROJECT_DIR$/common/rps-common-lib/rps-common-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/rps-grpc-lib/rps-grpc-lib.iml" filepath="$PROJECT_DIR$/common/rps-grpc-lib/rps-grpc-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rps-microservices.iml" filepath="$PROJECT_DIR$/rps-microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/microservices/rps-qry-service/rps-qry-service.iml" filepath="$PROJECT_DIR$/microservices/rps-qry-service/rps-qry-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/microservices/score-cmd-service/score-cmd-service.iml" filepath="$PROJECT_DIR$/microservices/score-cmd-service/score-cmd-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/microservices/score-qry-service/score-qry-service.iml" filepath="$PROJECT_DIR$/microservices/score-qry-service/score-qry-service.iml" />
+    </modules>
+  </component>
+</project>

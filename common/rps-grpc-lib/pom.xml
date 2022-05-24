@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.al.qdt</groupId>
+    <artifactId>rps-grpc-lib</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>RPS Game gRPC Library Project</name>
+    <description>This project contains Rock Paper Scissors game messages and service descriptions in the proto 3 format.</description>
+
+    <licenses>
+        <license>
+            <name>The GNU General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/${github.repo.username}/${github.repo.name}</url>
+        <connection>scm:git:git://github.com/${github.repo.username}/${github.repo.name}.git</connection>
+        <developerConnection>scm:git:git@github.com:${github.repo.username}/${github.repo.name}.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <!-- General properties -->
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Dependencies -->
+        <grpc.version>1.32.1</grpc.version>
+        <protobuf.version>3.12.0</protobuf.version>
+        <javax.annotation-api.version>1.2</javax.annotation-api.version>
+        <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <!-- Plugins -->
+        <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
+        <os-maven-plugin.version>1.6.2</os-maven-plugin.version>
+        <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+        <jib-maven-plugin.version>3.1.4</jib-maven-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <site-maven-plugin.version>0.12</site-maven-plugin.version>
+        <maven-release-plugin.version>3.0.0-M1</maven-release-plugin.version>
+        <!-- CircleCI properties -->
+        <build.number>000</build.number>
+        <commit.hash>local-build</commit.hash>
+        <build.user>local-build</build.user>
+        <build.repo>local-build</build.repo>
+        <circle.workflow>local-build</circle.workflow>
+        <!-- GitHub properties -->
+        <!-- Github server corresponds to entry in ~/.m2/settings.xml -->
+        <github.global.server>github</github.global.server>
+        <!-- GitHub repo name -->
+        <github.repo.name>rps-microservices</github.repo.name>
+        <!-- GitHub account username -->
+        <github.repo.username>hokushin118</github.repo.username>
+        <!-- Branch for storing deployed artifacts, does not need to exist, will be created by plugin -->
+        <github-staging-repo>nexus-repo</github-staging-repo>
+    </properties>
+
+    <profiles>
+        <!-- Profile for running application on development environment -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <junit-tests.skip>false</junit-tests.skip>
+                <jacoco.skip>false</jacoco.skip>
+                <site-maven-plugin.skip>false</site-maven-plugin.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                        <!-- For artifact deployment in the nexus-repo branch of the GitHub repository -->
+                        <configuration>
+                            <!-- Deploying artifact to the target/nexus-repo folder -->
+                            <altDeploymentRepository>
+                                internal.repo::default::file://${project.build.directory}/${github-staging-repo}
+                            </altDeploymentRepository>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Profile for running application on production environment -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <junit-tests.skip>false</junit-tests.skip>
+                <jacoco.skip>true</jacoco.skip>
+                <site-maven-plugin.skip>false</site-maven-plugin.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                        <!-- For artifact deployment in the nexus-repo branch of the GitHub repository -->
+                        <configuration>
+                            <!-- Deploying artifact to the target/nexus-repo folder -->
+                            <altDeploymentRepository>
+                                internal.repo::default::file://${project.build.directory}/${github-staging-repo}
+                            </altDeploymentRepository>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Profile for deploying artifacts to the GitHub Packages repository -->
+        <profile>
+            <id>github</id>
+            <properties>
+                <junit-tests.skip>true</junit-tests.skip>
+                <jacoco.skip>true</jacoco.skip>
+                <site-maven-plugin.skip>true</site-maven-plugin.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+            <!--
+            For artifact deployment in the GitHub Packages repository
+            https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages
+            -->
+            <distributionManagement>
+                <!-- Repository for holding project releases (GitHub internal) -->
+                <repository>
+                    <id>github</id>
+                    <name>GitHub Packages</name>
+                    <url>https://maven.pkg.github.com/${github.repo.username}/${github.repo.name}</url>
+                </repository>
+                <!-- Repository for holding project snapshots -->
+                <snapshotRepository>
+                    <id>packagecloud.snapshots</id>
+                    <name>Packagecloud Packages</name>
+                    <url>packagecloud+https://packagecloud.io/hokushin/snapshot</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-bom</artifactId>
+                <version>${grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${javax.annotation-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>${os-maven-plugin.version}</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+            <!-- Plugin for compiling the source of the project -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+            </plugin>
+            <!-- plugin for assisting with the Maven build lifecycle -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>add-protobuf-generated-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/protobuf/java</source>
+                                <source>${project.build.directory}/generated-sources/protobuf/java-grpc</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-unit-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for generating Java classes from proto files -->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>${protobuf-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- Dealing with 'Command Line is too long' errors -->
+                    <useArgumentFile>true</useArgumentFile>
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                    <checkStaleness>true</checkStaleness>
+                    <protocArtifact>
+                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>
+                        io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
+                    </pluginArtifact>
+                    <protoSourceRoot>
+                        ${project.basedir}/src/main/proto
+                    </protoSourceRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                            <goal>test-compile</goal>
+                            <goal>test-compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for generating JUnit tests reports for generating JUnit tests reports during the test phase of the build lifecycle to execute the unit tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <!-- Additional parameters to be passed to the forked JVM process -->
+                    <argLine>
+                        --illegal-access=permit
+                    </argLine>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <reportsDirectory>${project.build.directory}/test-reports/unit</reportsDirectory>
+                    <argLine>${surefireArgLine}</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- JaCoCo plugin for generating test coverage reports -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <!--
+                      Prepares the property pointing to the JaCoCo runtime agent which
+                      is passed as VM argument when Maven the Surefire plugin is executed
+                    -->
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <!--Sets the path to the file which contains the execution data -->
+                            <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+                            <!-- Sets the name of the property containing the settings for JaCoCo runtime agent -->
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
+                            <!-- Sets the output directory for the code coverage report. -->
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>COMPLEXITY</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.70</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for controlling certain environmental constraints such as Maven version, JDK version etc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[${maven-compiler-plugin.version},)</version>
+                                    <message>Invalid Maven version. It should, at least, be
+                                        ${maven-compiler-plugin.version}
+                                    </message>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[${java.version},)</version>
+                                    <message>Invalid Java version. It should, at least, be
+                                        ${java.version}
+                                    </message>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for integration with GitHub -->
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>${site-maven-plugin.version}</version>
+                <configuration>
+                    <skip>${site-maven-plugin.skip}</skip>
+                    <!-- Git commit message -->
+                    <message>Maven artifacts for ${project.version}</message>
+                    <!-- Disable webpage processing -->
+                    <noJekyll>true</noJekyll>
+                    <!-- Matches distribution management repository url above -->
+                    <outputDirectory>${project.build.directory}/${github-staging-repo}</outputDirectory>
+                    <!-- Remote branch (that is used as Nexus OSS repo) name -->
+                    <branch>refs/heads/${github-staging-repo}</branch>
+                    <!-- If you remove this then the old artifact will be removed and new
+                          one will replace. But with the merge tag you can just release by changing the version -->
+                    <!--                    <merge>true</merge>-->
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <!-- GitHub repo name -->
+                    <repositoryName>${github.repo.name}</repositoryName>
+                    <!-- GitHub repo username  -->
+                    <repositoryOwner>${github.repo.username}</repositoryOwner>
+                </configuration>
+                <executions>
+                    <!-- Binding site-maven-plugin:site to deploy lifecycle -->
+                    <execution>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for making project Release -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <!-- Path to the repo Tags folder -->
+                    <tagBase>https://github.com/${github.repo.username}/${github.repo.name}/tags</tagBase>
+                    <!-- Path to the repo Branches folder -->
+                    <branchBase>https://github.com/${github.repo.username}/${github.repo.name}/branches</branchBase>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <!-- Tasks to be run before creating tag -->
+                    <preparationGoals>clean verify</preparationGoals>
+                    <releaseProfiles>github</releaseProfiles>
+                    <!-- Commit message to be shown in the CircleCI job -->
+                    <scmCommentPrefix>[skip ci] Maven Release Plugin ${maven-release-plugin.version}-</scmCommentPrefix>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>mvnw</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--
+   For artifact deployment in the nexus-repo branch of the GitHub repository
+   mvn deploy
+   -->
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/${github.repo.username}</url>
+        </repository>
+    </distributionManagement>
+</project>

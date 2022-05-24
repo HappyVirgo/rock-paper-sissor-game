@@ -1,0 +1,25 @@
+server:
+  port: 8080
+  error:
+    include-stacktrace: always
+
+# gRPC server configuration
+grpc:
+  server:
+    port: 6790
+    # Turn on the service listing (for both actuator and grpc)
+    reflection-service-enabled: true
+
+spring:
+  config:
+    location: classpath:/application-dev.yml
+  banner:
+    location: classpath:/dev/banner.txt
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        # exposing all endpoints
+        include: "*"

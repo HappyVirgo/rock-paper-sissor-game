@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+# gRPC server configuration
+grpc:
+  server:
+    port: 6565
+    # Turn off the service listing (for both actuator and grpc)
+    reflection-service-enabled: off
+
+spring:
+  config:
+    location: classpath:/application-prod.yml
+  banner:
+    location: classpath:/prod/banner.txt
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  # MariaDB database connection configuration
+  datasource:
+    url: jdbc:mariadb://localhost:3306/rpsDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: 12345
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+
+  # Cache configuration
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+  # Redis configuration
+  redis:
+    host: localhost
+    password: 12345
+    port: 6379
+
+# Actuator configuration
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        # exposed endpoints
+        include: health, info

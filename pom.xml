@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.al.qdt</groupId>
+	<artifactId>rps-microservices</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>rps-microservices</name>
+	<description>RPS game project.</description>
+
+	<properties>
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
+	</properties>
+
+	<modules>
+		<module>common/cqrs-es-framework</module>
+		<module>common/rps-grpc-lib</module>
+		<module>common/rps-common-lib</module>
+		<module>microservices/score-cmd-service</module>
+		<module>microservices/score-qry-service</module>
+		<module>microservices/rps-cmd-service</module>
+		<module>microservices/rps-qry-service</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>

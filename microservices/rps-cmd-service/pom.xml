@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.al.qdt</groupId>
+        <artifactId>rps-microservice</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom-microservice.xml</relativePath> <!-- lookup parent from repository -->
+    </parent>
+
+    <artifactId>rps-cmd-service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>RPS Game Command Microservice</name>
+    <description>The Rock Paper Scissors game command microservice provides REST and gRPC APIs for the Rock Paper Scissors game.</description>
+
+    <properties>
+        <!-- Main class of the application-->
+        <main-class>com.al.qdt.rps.cmd.RpsCmdServiceApp</main-class>
+        <!-- Docker Hub properties -->
+        <image.path>${docker-hub-user-id}/${uberjar.name}</image.path>
+        <!-- Sonar properties -->
+        <sonar.coverage.exclusions>
+            **/RpsCmdServiceApp.java
+        </sonar.coverage.exclusions>
+        <!-- Name of the project -->
+        <uberjar.name>${project.artifactId}</uberjar.name>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <!-- exclude JUnit 4 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Final name of the artifact -->
+        <finalName>${uberjar.name}</finalName>
+
+        <plugins>
+            <!-- Plugin for adding custom integration test folder -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-integration-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/integration-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

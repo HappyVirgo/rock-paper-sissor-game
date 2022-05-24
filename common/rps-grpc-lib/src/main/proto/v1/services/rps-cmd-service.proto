@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package v1.services;
+
+import "v1/dto/game.proto";
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.services";
+option java_outer_classname = "RpsCmdBaseService";
+option java_multiple_files = true;
+
+/* The message definition of the inputs for the game's round request. */
+message GameRequest {
+  v1.dto.GameDto game = 1 [json_name = "game"]; // game input parameters
+}
+
+/* The message definition of the result of the game's round. */
+message GameResponse {
+  v1.dto.GameResultDto result = 1 [json_name = "result"]; // game result
+}
+
+/* The message definition of the game's delete by id request. */
+message DeleteGameByIdRequest {
+  string id = 1 [json_name = "id"]; // id of the game to be deleted
+}
+
+/* The message definition of the game's delete by id response. */
+message DeleteGameByIdResponse {
+}
+
+/* The rps command service definition. */
+service RpsCmdService {
+
+  /*
+  * Play game unary rpc service.
+  */
+  rpc play(GameRequest) returns (GameResponse) {};
+
+  /*
+  * Play game client-to-server streaming rpc service.
+  */
+  rpc playClientStreaming(stream GameRequest) returns (GameResponse) {};
+
+  /*
+  * Play game server-to-client streaming rpc service.
+  */
+  rpc playServerStreaming(GameRequest) returns (stream GameResponse) {};
+
+  /*
+  * Play game bidirectional streaming rpc service.
+  */
+  rpc playBidirectionalStreaming(stream GameRequest) returns (stream GameResponse) {};
+
+  /*
+  * Delete game by id unary rpc service.
+  */
+  rpc deleteById(DeleteGameByIdRequest) returns (DeleteGameByIdResponse) {};
+
+  /*
+  * Delete game by id client-to-server streaming rpc service.
+  */
+  rpc deleteByIdClientStreaming(stream DeleteGameByIdRequest) returns (DeleteGameByIdResponse) {};
+
+  /*
+  * Delete game by id server-to-client streaming rpc service.
+  */
+  rpc deleteByIdServerStreaming(DeleteGameByIdRequest) returns (stream DeleteGameByIdResponse) {};
+
+  /*
+  * Delete game by id bidirectional streaming rpc service.
+  */
+  rpc deleteByIdBidirectionalStreaming(stream DeleteGameByIdRequest) returns (stream DeleteGameByIdResponse) {};
+}

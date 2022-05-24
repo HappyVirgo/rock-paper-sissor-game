@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+grpc:
+  server:
+    port: 6792
+
+spring:
+  config:
+    location: classpath:/application-it.yml
+  banner:
+    location: classpath:/it/banner.txt

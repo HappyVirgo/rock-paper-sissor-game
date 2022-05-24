@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package v1.services;
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.services";
+option java_outer_classname = "AdminCmdBaseService";
+option java_multiple_files = true;
+
+/* The message definition of the request for restoring database. */
+message RestoreDbRequest {
+}
+
+/* The message definition of the database restore response. */
+message RestoreDbResponse {
+}
+
+/* The admin command service definition. */
+service AdminCmdService {
+
+  /*
+  * Restore database unary rpc service.
+  */
+  rpc restoreDb(RestoreDbRequest) returns (RestoreDbResponse) {};
+
+  /*
+  * Restore database client-to-server streaming rpc service.
+  */
+  rpc restoreDbClientStreaming(stream RestoreDbRequest) returns (RestoreDbResponse) {};
+
+  /*
+  * Restore database server-to-client streaming rpc service.
+  */
+  rpc restoreDbServerStreaming(RestoreDbRequest) returns (stream RestoreDbResponse) {};
+
+  /*
+  * Restore database bidirectional streaming rpc service.
+  */
+  rpc restoreDbBidirectionalStreaming(stream RestoreDbRequest) returns (stream RestoreDbResponse) {};
+}

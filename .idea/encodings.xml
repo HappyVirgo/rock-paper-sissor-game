@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="ISO-8859-1">
+    <file url="file://$PROJECT_DIR$/common/cqrs-es-framework/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/rps-common-lib/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/rps-cmd-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/rps-cmd-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/rps-qry-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/rps-qry-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/score-cmd-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/score-cmd-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/score-qry-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/score-qry-service/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

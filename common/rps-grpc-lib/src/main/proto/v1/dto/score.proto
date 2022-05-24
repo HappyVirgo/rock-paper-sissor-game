@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package v1.dto;
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.dto";
+option java_outer_classname = "ScoreProtos";
+option java_multiple_files = true;
+
+/* The message definition of the game's round score. */
+message ScoreDto {
+  string winner = 1 [json_name = "winner"]; // winner of the round
+}

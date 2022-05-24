@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.al.qdt</groupId>
+        <artifactId>rps-microservice</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom-microservice.xml</relativePath> <!-- lookup parent from repository -->
+    </parent>
+
+    <artifactId>score-cmd-service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>Score Command Microservice</name>
+    <description>The Score command microservice provides REST and gRPC APIs for the Rock Paper Scissors game scores.</description>
+
+    <properties>
+        <!-- Main class of the application-->
+        <main-class>com.al.qdt.score.cmd.ScoreCmdServiceApp</main-class>
+        <!-- Docker Hub properties -->
+        <image.path>${docker-hub-user-id}/${uberjar.name}</image.path>
+        <!-- Sonar properties -->
+        <sonar.coverage.exclusions>
+            **/ScoreCmdServiceApp.java
+        </sonar.coverage.exclusions>
+        <!-- Name of the project -->
+        <uberjar.name>${project.artifactId}</uberjar.name>
+    </properties>
+
+    <dependencies>
+        <!-- MongoDB Testing -->
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>${embed.mongo.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-spring</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Final name of the artifact -->
+        <finalName>${uberjar.name}</finalName>
+
+        <plugins>
+            <!-- Plugin for adding custom integration test folder -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-integration-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/integration-test/groovy</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Plugin for running Spock tests -->
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package v1.common;
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.common";
+option java_outer_classname = "HandProtos";
+option java_multiple_files = true;
+
+/**
+ * This enum contains Rock Paper Scissors game options.
+ */
+enum Hand {
+  EMPTY = 0;
+  ROCK = 1;
+  PAPER = 2;
+  SCISSORS = 3;
+}

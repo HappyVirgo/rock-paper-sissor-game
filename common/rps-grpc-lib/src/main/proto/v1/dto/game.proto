@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package v1.dto;
+
+import "v1/common/hand.proto";
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.dto";
+option java_outer_classname = "GameProtos";
+option java_multiple_files = true;
+
+/* The message definition of the inputs of the game's round. */
+message GameDto {
+  string username = 1 [json_name = "username"]; // user name
+  v1.common.Hand hand = 2 [json_name = "hand"]; // user's choice
+}
+
+/* The message definition for the game round result. */
+message GameResultDto {
+  string user_choice = 1 [json_name = "user_choice"]; // user choice
+  string machine_choice = 2 [json_name = "machine_choice"]; // machine choice
+  string result = 3 [json_name = "result"]; // message
+}

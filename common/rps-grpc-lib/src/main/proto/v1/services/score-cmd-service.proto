@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package v1.services;
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.services";
+option java_outer_classname = "ScoreCmdBaseService";
+option java_multiple_files = true;
+
+/* The message definition of the score's delete by id request. */
+message DeleteScoreByIdRequest {
+  string id = 1 [json_name = "id"]; // id of the score to be deleted
+}
+
+/* The message definition of the score's delete by id response. */
+message DeleteScoreByIdResponse {
+}
+
+/* The Score command service definition. */
+service ScoreCmdService {
+
+  /*
+  * Deletes score by id unary rpc service.
+  */
+  rpc deleteById(DeleteScoreByIdRequest) returns (DeleteScoreByIdResponse) {};
+}

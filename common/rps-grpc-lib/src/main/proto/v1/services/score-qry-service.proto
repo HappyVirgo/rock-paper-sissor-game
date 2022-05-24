@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package v1.services;
+
+import "v1/dto/score.proto";
+import "v1/common/player.proto";
+
+option go_package = "/pb";
+
+option java_package = "com.al.qdt.rps.grpc.v1.services";
+option java_outer_classname = "ScoreQryBaseService";
+option java_multiple_files = true;
+
+/* The message definition of the find score by id request data. */
+message FindScoreByIdRequest {
+  string id = 1 [json_name = "id"];  // id of the score to be found
+}
+
+/* The message definition of the find scores by winner request data. */
+message FindScoreByWinnerRequest {
+  v1.common.Player winner = 1 [json_name = "winner"]; // game round winner
+}
+
+/* The message definition of the found score. */
+message ScoreResponse {
+  v1.dto.ScoreDto score = 1 [json_name = "score"]; // found score
+}
+
+/* The message definition of the request for all scores. */
+message ListOfScoresRequest {
+}
+
+/* The message definition of the list of scores. */
+message ListOfScoresResponse {
+  repeated v1.dto.ScoreDto scores = 1 [json_name = "scores"]; // list of scores
+}
+
+/* The Score query service definition. */
+service ScoreQryService {
+
+  /*
+  * Returns all scores unary rpc service.
+  */
+  rpc listOfScores(ListOfScoresRequest) returns (ListOfScoresResponse) {};
+
+  /*
+  * Finds score by id unary rpc service.
+  */
+  rpc findById(FindScoreByIdRequest) returns (ScoreResponse) {};
+
+  /*
+  * Finds scores by winner unary rpc service.
+  */
+  rpc findByWinner(FindScoreByWinnerRequest) returns (ListOfScoresResponse) {};
+}
