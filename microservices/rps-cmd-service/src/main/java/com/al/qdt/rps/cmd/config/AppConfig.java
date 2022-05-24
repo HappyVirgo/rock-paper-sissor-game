@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import({AppCmdConfig.class,
+        AsyncConfig.class,
+        FilterConfig.class,
         WebMvcCmdConfig.class,
         OpenApiConfig.class,
         MongoConfig.class,

@@ -3,6 +3,7 @@ package com.al.qdt.rps.cmd.services.mappers;
 import com.al.qdt.rps.cmd.base.AbstractIntegrationTest;
 import com.al.qdt.rps.cmd.base.DtoTests;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ class GameDtoMapperIT extends AbstractIntegrationTest implements DtoTests {
     @Autowired
     GameDtoMapper gameDtoMapper;
 
+    @Order(1)
     @Test
     @DisplayName("Testing injections")
     void injectionTest() {

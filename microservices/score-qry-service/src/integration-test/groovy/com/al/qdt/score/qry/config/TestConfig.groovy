@@ -1,5 +1,6 @@
 package com.al.qdt.score.qry.config
 
+
 import com.al.qdt.common.infrastructure.queries.QueryDispatcherImpl
 import com.al.qdt.cqrs.infrastructure.QueryDispatcher
 import com.al.qdt.score.qry.handlers.QueryHandler

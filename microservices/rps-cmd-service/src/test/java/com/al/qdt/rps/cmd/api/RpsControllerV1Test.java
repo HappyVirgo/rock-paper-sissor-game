@@ -8,11 +8,7 @@ import com.al.qdt.rps.cmd.services.RpsServiceV1;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -35,27 +31,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Testing of the RpsControllerV1 controller")
 @Tag(value = "controller")
 class RpsControllerV1Test implements DtoTests {
-    MockMvc mockMvc;
-
-    final ObjectMapper objectMapper = new ObjectMapper();
 
     @Mock
     RpsServiceV1 rpsService;
@@ -69,13 +56,18 @@ class RpsControllerV1Test implements DtoTests {
     @Captor
     ArgumentCaptor<UUID> idArgumentCaptor;
 
+    MockMvc mockMvc;
+    ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
+        this.objectMapper = new ObjectMapper();
         this.gameDtoArgumentCaptor = ArgumentCaptor.forClass(GameDto.class);
         this.idArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(this.rpsController)
                 .addPlaceholderValue("api.version-one", "/v1")
+                .addPlaceholderValue("api.version-one-async", "/v1.1")
                 .addPlaceholderValue("api.endpoint-games", "games")
                 .setControllerAdvice(new GlobalRestExceptionHandler())
                 .setControllerAdvice(new InvalidUserInputExceptionHandler())
@@ -120,6 +112,7 @@ class RpsControllerV1Test implements DtoTests {
             verify(rpsService, only()).play(gameDtoArgumentCaptor.capture());
             assertEquals(USERNAME_ONE, gameDtoArgumentCaptor.getValue().getUsername());
             assertEquals(ROCK.name(), gameDtoArgumentCaptor.getValue().getHand());
+            verifyNoMoreInteractions(rpsService);
             reset(rpsService);
         }
 
@@ -146,6 +139,8 @@ class RpsControllerV1Test implements DtoTests {
             // verify that it was the only invocation and
             // that there's no more unverified interactions
             verify(rpsService, never()).play(any(GameDto.class));
+            verifyNoMoreInteractions(rpsService);
+            reset(rpsService);
         }
 
         @SneakyThrows({JsonProcessingException.class, Exception.class})
@@ -171,6 +166,8 @@ class RpsControllerV1Test implements DtoTests {
             // verify that it was the only invocation and
             // that there's no more unverified interactions
             verify(rpsService, never()).play(any(GameDto.class));
+            verifyNoMoreInteractions(rpsService);
+            reset(rpsService);
         }
     }
 
@@ -194,6 +191,7 @@ class RpsControllerV1Test implements DtoTests {
             // that there's no more unverified interactions
             verify(rpsService, only()).deleteById(idArgumentCaptor.capture());
             assertEquals(TEST_UUID, idArgumentCaptor.getValue());
+            verifyNoMoreInteractions(rpsService);
             reset(rpsService);
         }
     }

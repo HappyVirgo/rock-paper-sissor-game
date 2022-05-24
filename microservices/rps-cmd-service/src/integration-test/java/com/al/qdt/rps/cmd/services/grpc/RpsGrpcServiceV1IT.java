@@ -8,10 +8,7 @@ import com.al.qdt.rps.grpc.v1.services.RpsCmdServiceGrpc;
 import io.grpc.internal.testing.StreamRecorder;
 import lombok.SneakyThrows;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -38,6 +35,7 @@ class RpsGrpcServiceV1IT extends AbstractIntegrationTest implements ProtoTests {
     @GrpcClient("${grpc.server.inProcessName}")
     protected RpsCmdServiceGrpc.RpsCmdServiceFutureStub rpsCmdServiceFutureStub;
 
+    @Order(1)
     @Test
     @DisplayName("Testing injections")
     void injectionTest() {

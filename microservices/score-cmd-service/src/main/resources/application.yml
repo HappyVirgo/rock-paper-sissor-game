@@ -6,6 +6,9 @@ server:
   tomcat:
     threads:
       max: 100
+  http2:
+    # Enables http2 support
+    enabled: true
   error:
     # Includes error attribute to message response
     include-message: always
@@ -24,7 +27,6 @@ spring:
   # Mongo properties
   data:
     mongodb:
-      host: localhost
       port: 27017
       database: rpsDB
       username: root
@@ -42,10 +44,11 @@ spring:
   # Kafka properties
   kafka:
     producer:
-      bootstrap-servers: localhost:9092
+      client-id: '@project.artifactId@'
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       retries: 3
+      acks: all
 
 # Actuator configuration
 management:
@@ -56,11 +59,14 @@ management:
     export:
       prometheus:
         enabled: true
-  endpoints:
-    web:
-      exposure:
-        # exposing endpoints
-        include: prometheus
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+  endpoint:
+    health:
+      show-details: always
   info:
     git:
       mode: full
@@ -77,6 +83,7 @@ springdoc:
   # enables pretty-printed output of the OpenApi specification
   writer-with-default-pretty-printer: true
 
+# OpenApi configuration
 api:
   dev:
     server:
@@ -88,6 +95,21 @@ api:
       base-url: http://localhost:8080${server.servlet.context-path}
   endpoint-scores: scores
   version-one: /v1
+  version-one-async: /v1.1
   version-two: /v2
+  version-two-async: /v2.1
   license-name: The GNU General Public License, Version 3
   license-url: https://www.gnu.org/licenses/gpl-3.0.txt
+
+# Application configuration
+app:
+  # Executor configuration
+  executor:
+    core-pool-size: 2
+    max-pool-size: 2
+    queue-capacity: 500
+    thread-name-prefix: async-thread
+  # Kafka configuration
+  kafka:
+    max-in-flight-request-per-connection: 1
+    is-idempotence-enabled: true

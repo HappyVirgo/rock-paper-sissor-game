@@ -45,3 +45,12 @@ spring:
   # Flyway configuration
   flyway:
     enabled: false
+
+  # Kafka properties
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9093,localhost:9094,localhost:9095
+
+  # Cache configuration
+  cache:
+    type: simple

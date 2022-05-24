@@ -10,6 +10,8 @@ import com.al.qdt.rps.cmd.config.TestConfig;
 import com.al.qdt.rps.grpc.v1.services.GameRequest;
 import io.grpc.Channel;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +21,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.annotation.PostConstruct;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ import static org.mockito.Mockito.when;
 @DirtiesContext
 @AutoConfigureMockMvc
 @Import({TestConfig.class, GrpcInProcessConfig.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("it")
 public abstract class AbstractIntegrationTest {
 
@@ -60,7 +62,7 @@ public abstract class AbstractIntegrationTest {
         assertNotNull(this.channel);
     }
 
-    protected void setupEnvironment(GameRequest gameRequest){
+    protected void setupEnvironment(GameRequest gameRequest) {
         final var playGameCommand = PlayGameCommand.builder()
                 .id(TEST_UUID)
                 .username(gameRequest.getGame().getUsername())
@@ -75,7 +77,7 @@ public abstract class AbstractIntegrationTest {
         setupEventStore(List.of(gamePlayedEvent));
     }
 
-    protected void setupEventStore(List<BaseEvent> events){
+    protected void setupEventStore(List<BaseEvent> events) {
         final var eventStore = applicationContext.getBean(EventStore.class);
 
         assertNotNull(eventStore);

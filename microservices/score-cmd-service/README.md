@@ -18,14 +18,14 @@ The Score Command microservice provides REST and gRPC APIs for the Rock Paper Sc
 * [Apache Groovy 3.0.9](https://groovy-lang.org)
 * [JaCoCo test coverage](https://www.jacoco.org/jacoco)
 ### Preconditions for running microservice
-* Make sure you have the infrastructure (docker-compose-infrastructure.yml) is up and running before you run Score command microservice.
+* Make sure you have the infrastructure is up and running before you run Score command microservice.
 * If not navigate to the docker directory on your computer.
 ```
     > cd docker
 ```
-* And run "docker-compose -f docker-compose-infrastructure.yml up --detach" command to deploy necessary infrastructure on docker containers in the background.
+* And run "docker-compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d" command to deploy necessary infrastructure on docker containers in the background.
 ```
-     > docker-compose -f docker-compose-infrastructure.yml up --detach
+     > docker-compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d
 ```
 * If rps-grpc-lib is not already installed navigate to the common/rps-grpc-lib directory on your computer.
 ```

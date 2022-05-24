@@ -28,7 +28,7 @@ public class QueryDispatcherImpl implements QueryDispatcher {
     @Override
     public <T extends BaseQuery, U extends AbstractEntity> List<U> send(T query) {
         final var handlers = this.routes.get(query.getClass());
-        if (handlers == null || handlers.size() <= 0) {
+        if (handlers == null || handlers.isEmpty()) {
             throw new DispatcherException(NO_COMMAND_HANDLER_REGISTERED_EXCEPTION_MESSAGE);
         }
         if (handlers.size() > 1) {

@@ -16,6 +16,16 @@ spring:
   banner:
     location: classpath:/dev/banner.txt
 
+  # Mongo properties
+  data:
+    mongodb:
+      host: localhost
+
+  # Kafka properties
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9093,localhost:9094,localhost:9095
+
 # Actuator configuration
 management:
   endpoints:
@@ -23,3 +33,6 @@ management:
       exposure:
         # exposing all endpoints
         include: "*"
+  endpoint:
+    health:
+      show-details: always

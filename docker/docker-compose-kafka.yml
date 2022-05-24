@@ -1,0 +1,189 @@
+# We will create a kafka cluster
+# 3 kafka brokers at ports 9093, 9092 and 9093
+# 3 instances of zookeeper at port 2181, 2182 nad 2183
+
+version: "3.8"
+
+services:
+  zk-1:
+    container_name: zk-1
+    image: bitnami/zookeeper:${ZOOKEEPER_VERSION}
+    hostname: ${ZOOKEEPER_HOSTNAME_1}
+    restart: always
+    ports:
+      - 2181:2181 # docker host port / container port
+    environment:
+      - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_1}
+      - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT_1}
+      - ZOOKEEPER_TICK_TIME=${ZOOKEEPER_TICK_TIME}
+      - ZOOKEEPER_INIT_LIMIT=${ZOOKEEPER_INIT_LIMIT}
+      - ZOOKEEPER_SYNC_LIMIT=${ZOOKEEPER_SYNC_LIMIT}
+      - ALLOW_ANONYMOUS_LOGIN=${ALLOW_ANONYMOUS_LOGIN}
+    volumes:
+      - zk-log-1-data:/var/lib/zookeeper/log
+      - zk-data-1-data:/var/lib/zookeeper/data # creating a volume to save Zookeeper data locally
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  zk-2:
+    container_name: zk-2
+    image: bitnami/zookeeper:${ZOOKEEPER_VERSION}
+    hostname: ${ZOOKEEPER_HOSTNAME_2}
+    restart: always
+    ports:
+      - 2182:2181 # docker host port / container port
+    environment:
+      - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_2}
+      - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT_2}
+      - ZOOKEEPER_TICK_TIME=${ZOOKEEPER_TICK_TIME}
+      - ZOOKEEPER_INIT_LIMIT=${ZOOKEEPER_INIT_LIMIT}
+      - ZOOKEEPER_SYNC_LIMIT=${ZOOKEEPER_SYNC_LIMIT}
+      - ALLOW_ANONYMOUS_LOGIN=${ALLOW_ANONYMOUS_LOGIN}
+    volumes:
+      - zk-log-2-data:/var/lib/zookeeper/log
+      - zk-data-2-data:/var/lib/zookeeper/data # creating a volume to save Zookeeper data locally
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  zk-3:
+    container_name: zk-3
+    image: bitnami/zookeeper:${ZOOKEEPER_VERSION}
+    hostname: ${ZOOKEEPER_HOSTNAME_3}
+    restart: always
+    ports:
+      - 2183:2181 # docker host port / container port
+    environment:
+      - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_3}
+      - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT_3}
+      - ZOOKEEPER_TICK_TIME=${ZOOKEEPER_TICK_TIME}
+      - ZOOKEEPER_INIT_LIMIT=${ZOOKEEPER_INIT_LIMIT}
+      - ZOOKEEPER_SYNC_LIMIT=${ZOOKEEPER_SYNC_LIMIT}
+      - ALLOW_ANONYMOUS_LOGIN=${ALLOW_ANONYMOUS_LOGIN}
+    volumes:
+      - zk-log-3-data:/var/lib/zookeeper/log
+      - zk-data-3-data:/var/lib/zookeeper/data # creating a volume to save Zookeeper data locally
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  kafka-1:
+    container_name: kafka-1
+    image: bitnami/kafka:${KAFKA_VERSION}
+    hostname: ${KAFKA_HOSTNAME_1}
+    restart: always
+    ports:
+      - 9093:9093 # docker host port / container port
+    environment:
+      - KAFKA_CFG_BROKER_ID=${KAFKA_BROKER_ID_1}
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1},${ZOOKEEPER_HOSTNAME_2}:${ZOOKEEPER_CLIENT_PORT_2},${ZOOKEEPER_HOSTNAME_3}:${ZOOKEEPER_CLIENT_PORT_3}
+      - KAFKA_CFG_LISTENERS=BROKER://:${KAFKA_BROKER_INTERNAL_PORT},EXTERNAL://:${KAFKA_BROKER_PORT_1} # definition of interfaces Kafka binds to
+      - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://kafka-1:${KAFKA_BROKER_INTERNAL_PORT},EXTERNAL://localhost:${KAFKA_BROKER_PORT_1} # definition of running Kafka brokers that clients can connect to
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+      - KAFKA_INTER_BROKER_LISTENER_NAME=${KAFKA_INTER_BROKER_LISTENER_NAME}
+      - KAFKA_HEAP_OPTS=${KAFKA_HEAP_OPTS} # kafka's Java Heap size
+      - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER} # allow to use the PLAINTEXT listener
+    volumes:
+      - kafka-1-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
+      - ~/infrastructure/kafka/mtls/kafka-1-creds:/etc/kafka/secrets
+    depends_on:
+      - zk-1
+      - zk-2
+      - zk-3
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  kafka-2:
+    container_name: kafka-2
+    image: bitnami/kafka:${KAFKA_VERSION}
+    hostname: ${KAFKA_HOSTNAME_2}
+    restart: always
+    ports:
+      - 9094:9094 # docker host port / container port
+    environment:
+      - KAFKA_CFG_BROKER_ID=${KAFKA_BROKER_ID_2}
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1},${ZOOKEEPER_HOSTNAME_2}:${ZOOKEEPER_CLIENT_PORT_2},${ZOOKEEPER_HOSTNAME_3}:${ZOOKEEPER_CLIENT_PORT_3}
+      - KAFKA_CFG_LISTENERS=BROKER://:${KAFKA_BROKER_INTERNAL_PORT},EXTERNAL://:${KAFKA_BROKER_PORT_2} # definition of interfaces Kafka binds to
+      - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://kafka-2:${KAFKA_BROKER_INTERNAL_PORT},EXTERNAL://localhost:${KAFKA_BROKER_PORT_2} # definition of running Kafka brokers that clients can connect to
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+      - KAFKA_INTER_BROKER_LISTENER_NAME=${KAFKA_INTER_BROKER_LISTENER_NAME}
+      - KAFKA_HEAP_OPTS=${KAFKA_HEAP_OPTS} # kafka's Java Heap size
+      - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER} # allow to use the PLAINTEXT listener
+    volumes:
+      - kafka-2-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
+      - ~/infrastructure/kafka/mtls/kafka-2-creds:/etc/kafka/secrets
+    depends_on:
+      - zk-1
+      - zk-2
+      - zk-3
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  kafka-3:
+    container_name: kafka-3
+    image: bitnami/kafka:${KAFKA_VERSION}
+    hostname: ${KAFKA_HOSTNAME_3}
+    restart: always
+    ports:
+      - 9095:9095 # docker host port / container port
+    environment:
+      - KAFKA_CFG_BROKER_ID=${KAFKA_BROKER_ID_3}
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1},${ZOOKEEPER_HOSTNAME_2}:${ZOOKEEPER_CLIENT_PORT_2},${ZOOKEEPER_HOSTNAME_3}:${ZOOKEEPER_CLIENT_PORT_3}
+      - KAFKA_CFG_LISTENERS=BROKER://:${KAFKA_BROKER_INTERNAL_PORT},EXTERNAL://:${KAFKA_BROKER_PORT_3} # definition of interfaces Kafka binds to
+      - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://kafka-3:${KAFKA_BROKER_INTERNAL_PORT},EXTERNAL://localhost:${KAFKA_BROKER_PORT_3} # definition of running Kafka brokers that clients can connect to
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+      - KAFKA_INTER_BROKER_LISTENER_NAME=${KAFKA_INTER_BROKER_LISTENER_NAME}
+      - KAFKA_HEAP_OPTS=${KAFKA_HEAP_OPTS} # kafka's Java Heap size
+      - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER} # allow to use the PLAINTEXT listener
+    volumes:
+      - kafka-3-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
+      - ~/infrastructure/kafka/mtls/kafka-3-creds:/etc/kafka/secrets
+    depends_on:
+      - zk-1
+      - zk-2
+      - zk-3
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+# persistent volumes location
+volumes:
+  zk-data-1-data:
+    driver: local
+  zk-log-1-data:
+    driver: local
+  zk-data-2-data:
+    driver: local
+  zk-log-2-data:
+    driver: local
+  zk-data-3-data:
+    driver: local
+  zk-log-3-data:
+    driver: local
+  kafka-1-data:
+    driver: local
+  kafka-2-data:
+    driver: local
+  kafka-3-data:
+    driver: local
+
+
+# networks
+networks:
+  rps_net:
+    name: ${BACKEND_NETWORK}

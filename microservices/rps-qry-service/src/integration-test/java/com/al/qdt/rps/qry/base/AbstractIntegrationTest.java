@@ -3,6 +3,8 @@ package com.al.qdt.rps.qry.base;
 import com.al.qdt.rps.qry.RpsQryServiceApp;
 import com.al.qdt.rps.qry.config.GrpcInProcessConfig;
 import com.al.qdt.rps.qry.config.TestConfig;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -25,6 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext
 @AutoConfigureMockMvc
 @Import({TestConfig.class, GrpcInProcessConfig.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("it")
 public abstract class AbstractIntegrationTest {
 }

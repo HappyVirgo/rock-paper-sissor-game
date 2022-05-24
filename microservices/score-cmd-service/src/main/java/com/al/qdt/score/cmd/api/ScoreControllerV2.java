@@ -35,7 +35,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 /**
  * Controller for managing game scores.
  */
-@Slf4j
+@Slf4j(topic = "outbound-logs")
 @RestController
 @RequestMapping(path = "${api.version-two}/${api.endpoint-scores}", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

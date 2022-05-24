@@ -19,30 +19,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-import static com.al.qdt.common.helpers.Constants.MALFORMED_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORES_BY_WINNER_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORES_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORES_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORE_BY_ID_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORE_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.TEST_ID;
-import static com.al.qdt.common.helpers.Constants.TEST_WINNER;
+import static com.al.qdt.common.helpers.Constants.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Controller for managing game scores.
  */
-@Slf4j
+@Slf4j(topic = "outbound-logs")
 @RestController
 @RequestMapping(path = "${api.version-two}/${api.endpoint-scores}", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

@@ -7,9 +7,7 @@ import org.mapstruct.BeforeMapping;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import org.springframework.stereotype.Component;
 
-@Component
 @Mapper(config = CommonConfig.class,
         builder = @Builder(disableBuilder = true))
 public abstract class GameMapper {

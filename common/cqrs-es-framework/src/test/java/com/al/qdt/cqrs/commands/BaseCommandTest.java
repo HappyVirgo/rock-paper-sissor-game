@@ -22,7 +22,7 @@ class BaseCommandTest {
 
     @Test
     @DisplayName("Testing getId() method")
-    public void getIdTest() {
+    void getIdTest() {
         when(this.baseCommand.getId()).thenReturn(TEST_ID);
 
         assertEquals(TEST_ID, this.baseCommand.getId());

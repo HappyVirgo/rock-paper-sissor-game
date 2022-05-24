@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Value
 @AllArgsConstructor
-public class FindScoresByWinnerQuery extends BaseQuery {
+public class FindScoresByWinnerQuery implements BaseQuery {
     public static final String WINNER_MUST_NOT_BE_BLANK = "Winner must not be null or empty";
 
     @NotBlank(message = WINNER_MUST_NOT_BE_BLANK)

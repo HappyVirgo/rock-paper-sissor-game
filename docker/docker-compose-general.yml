@@ -1,0 +1,108 @@
+version: "3.8"
+
+services:
+  mongo:
+    container_name: mongodb
+    image: mongo:latest
+    hostname: ${MONGO_HOSTNAME}
+    restart: always
+    ports:
+      - 27017:27017 # docker host port / container port
+    expose:
+      - 27017 # opens port 27017 on the container
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE} # the database
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME} # the database admin user
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD} # the database admin user password
+    volumes:
+      - mongodb-data:/data/db # creating a volume to save MongoDB data locally
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8088:8081 # docker host port / container port
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=${ME_CONFIG_MONGODB_SERVER}
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=${ME_CONFIG_MONGODB_AUTH_USERNAME} # username for admin access
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=${ME_CONFIG_MONGODB_AUTH_PASSWORD} # password for admin access
+      - ME_CONFIG_BASICAUTH_USERNAME=${ME_CONFIG_BASICAUTH_USERNAME}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${ME_CONFIG_BASICAUTH_PASSWORD}
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${ME_CONFIG_MONGODB_ADMINUSERNAME}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${ME_CONFIG_MONGODB_ADMINPASSWORD}
+      - ME_CONFIG_MONGODB_PORT=${ME_CONFIG_MONGODB_PORT}
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=${ME_CONFIG_MONGODB_AUTH_DATABASE}
+    depends_on:
+      - mongo
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  mariadb:
+    container_name: mariadb
+    image: bitnami/mariadb:latest
+    hostname: ${MARIADB_HOSTNAME}
+    restart: always
+    ports:
+      - 3306:3306 # docker host port / container port
+    expose:
+      - 3306 # opens port 3306 on the container
+    environment:
+      - MARIADB_ROOT_USER=${MARIADB_ROOT_USER} # the database admin user
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} # the database admin user password
+    volumes:
+      - mariadb-data:/bitnami/mariadb # creating a volume to save MariaDB data locally
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  adminer:
+    container_name: adminer
+    image: adminer:latest
+    ports:
+      - 9080:8080 # docker host port / container port
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  # Redis is a high performance key-value database. It shores cached values.
+  cache:
+    container_name: redis
+    image: bitnami/redis:latest
+    hostname: ${REDIS_HOSTNAME}
+    restart: always
+    ports:
+      - 6379:6379 # docker host port / container port
+    command: redis-server --save 20 1 --loglevel warning --protected-mode no --stop-writes-on-bgsave-error no
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+    volumes:
+      - cache-data:/bitnami/redis/data # creating a volume to save Redis data locally
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+# persistent volumes location
+volumes:
+  mongodb-data:
+    driver: local
+  mariadb-data:
+    driver: local
+  cache-data:
+    driver: local
+
+# networks
+networks:
+  rps_net:
+    name: ${BACKEND_NETWORK}

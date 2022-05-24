@@ -21,35 +21,45 @@ spring:
     show-sql: true
     hibernate:
       # schema will be automatically created afresh for every start of the application
-      ddl-auto: validate
-    database-platform: org.hibernate.dialect.H2Dialect
+      ddl-auto: update
+    # allows Hibernate to generate SQL optimized for a particular DBMS
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
     defer-datasource-initialization: false
     properties:
       hibernate:
         # format sql query
         format_sql: true
 
+  # MariaDB database connection configuration
   datasource:
-    url: jdbc:h2:mem:scoreDB;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    url: jdbc:mariadb://localhost:3306/scoreDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: 12345
-    driver-class-name: org.h2.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
 
-  h2:
-    # enables h2 console at http://localhost:8083/api/h2-console
-    console:
-      enabled: true
-      # relative path to the console
-      path: /h2-console
-      settings:
-        # disable remote access
-        web-allow-others: false
-        # prevent trace output
-        trace: false
+  # Flyway configuration
+  flyway:
+    url: jdbc:mariadb://localhost:3306
+    user: root
+    password: 12345
+    schemas: scoreDB
 
+  # Kafka properties
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:9093,localhost:9094,localhost:9095
+
+  # Cache configuration
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+  # Redis configuration
+  redis:
+    host: localhost
+    password: 12345
+    port: 6379
 
 # Actuator configuration
 management:
@@ -58,6 +68,9 @@ management:
       exposure:
         # exposing all endpoints
         include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 # Show bind values
 logging.level.org.hibernate.type.descriptor.sql: trace

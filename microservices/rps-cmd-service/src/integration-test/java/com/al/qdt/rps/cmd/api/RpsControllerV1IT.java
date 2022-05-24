@@ -9,13 +9,7 @@ import com.al.qdt.rps.cmd.commands.PlayGameCommand;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -66,6 +60,7 @@ class RpsControllerV1IT extends AbstractIntegrationTest implements DtoTests {
         this.expectedGameDto = null;
     }
 
+    @Order(1)
     @Test
     @DisplayName("Testing injections")
     void injectionTest() {

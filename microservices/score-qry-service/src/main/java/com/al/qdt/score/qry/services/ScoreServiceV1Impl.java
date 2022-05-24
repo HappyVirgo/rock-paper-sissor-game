@@ -10,37 +10,47 @@ import com.al.qdt.score.qry.queries.FindScoresByWinnerQuery;
 import com.al.qdt.score.qry.services.mappers.ScoreDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import static com.al.qdt.score.qry.config.CacheConfig.SCORES_CACHE_NAME;
+import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAME;
+import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAMES;
+import static com.al.qdt.score.qry.config.CacheConfig.WINNERS_CACHE_NAME;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = SCORE_CACHE_NAMES)
 public class ScoreServiceV1Impl implements ScoreServiceV1 {
+    private static final int IDX = 0;
+
     private final QueryDispatcher queryDispatcher;
     private final ScoreDtoMapper scoreDtoMapper;
 
     @Override
-    public Collection<ScoreDto> all() {
+    @Cacheable(cacheNames = SCORES_CACHE_NAME, sync = true)
+    public Iterable<ScoreDto> all() {
         log.info("SERVICE: Getting all scores.");
         return this.toListOfScoreDto(this.queryDispatcher.send(new FindAllScoresQuery()));
     }
 
     @Override
-    @Cacheable(value = "scores", key = "#id.toString()", sync = true)
+    @Cacheable(cacheNames = SCORE_CACHE_NAME, key = "#id.toString()", sync = true)
     public ScoreDto findById(UUID id) {
         log.info("SERVICE: Finding scores by id: {}.", id.toString());
         final List<Score> scores = this.queryDispatcher.send(new FindScoreByIdQuery(id));
-        return this.scoreDtoMapper.toDto(scores.get(0));
+        return this.scoreDtoMapper.toDto(scores.get(IDX));
     }
 
     @Override
-    public Collection<ScoreDto> findByWinner(Player winner) {
+    @Cacheable(cacheNames = WINNERS_CACHE_NAME, key = "#winner.name()", sync = true)
+    public Iterable<ScoreDto> findByWinner(Player winner) {
         log.info("SERVICE: Finding scores by winner: {}.", winner);
         return this.toListOfScoreDto(this.queryDispatcher.send(new FindScoresByWinnerQuery(winner.name())));
     }
@@ -51,9 +61,9 @@ public class ScoreServiceV1Impl implements ScoreServiceV1 {
      * @param scores scores
      * @return collection of score dto objects
      */
-    private Collection<ScoreDto> toListOfScoreDto(Collection<Score> scores) {
+    private Iterable<ScoreDto> toListOfScoreDto(Iterable<Score> scores) {
         final List<ScoreDto> scoreDtoList = new ArrayList<>();
-        scores.forEach((score) -> scoreDtoList.add(this.scoreDtoMapper.toDto(score)));
+        scores.forEach(score -> scoreDtoList.add(this.scoreDtoMapper.toDto(score)));
         return scoreDtoList;
     }
 }
