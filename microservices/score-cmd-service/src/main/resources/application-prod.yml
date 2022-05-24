@@ -14,6 +14,16 @@ spring:
   banner:
     location: classpath:/prod/banner.txt
 
+  # Mongo properties
+  data:
+    mongodb:
+      host: mongodb
+
+  # Kafka properties
+  kafka:
+    producer:
+      bootstrap-servers: kafka-1:9092
+
 # Actuator configuration
 management:
   endpoints:
@@ -21,4 +31,4 @@ management:
     web:
       exposure:
         # exposed endpoints
-        include: health, info
+        include: health, info, prometheus

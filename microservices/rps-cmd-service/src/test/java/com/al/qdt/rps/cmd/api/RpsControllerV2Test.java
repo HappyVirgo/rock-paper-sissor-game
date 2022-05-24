@@ -33,10 +33,7 @@ import static com.al.qdt.rps.grpc.v1.common.Hand.ROCK;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Testing of the RpsControllerV2 controller")
 @Tag(value = "controller")
 class RpsControllerV2Test implements ProtoTests {
+
     private static ProtobufJsonFormatHttpMessageConverter protobufJsonFormatHttpMessageConverter;
 
     MockMvc mockMvc;
@@ -81,6 +79,7 @@ class RpsControllerV2Test implements ProtoTests {
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(this.rpsController)
                 .addPlaceholderValue("api.version-two", "/v2")
+                .addPlaceholderValue("api.version-two-async", "/v2.1")
                 .addPlaceholderValue("api.endpoint-games", "games")
                 .setMessageConverters(protobufJsonFormatHttpMessageConverter)
                 .setControllerAdvice(new GlobalRestExceptionHandler())
@@ -128,6 +127,7 @@ class RpsControllerV2Test implements ProtoTests {
             verify(rpsService).play(gameRequestArgumentCaptor.capture());
             assertEquals(USERNAME_ONE, gameRequestArgumentCaptor.getValue().getUsername());
             assertEquals(ROCK, gameRequestArgumentCaptor.getValue().getHand());
+            verifyNoMoreInteractions(rpsService);
             reset(rpsService);
         }
     }
@@ -152,6 +152,7 @@ class RpsControllerV2Test implements ProtoTests {
             // that there's no more unverified interactions
             verify(rpsService).deleteById(idArgumentCaptor.capture());
             assertEquals(TEST_UUID, idArgumentCaptor.getValue());
+            verifyNoMoreInteractions(rpsService);
             reset(rpsService);
         }
     }

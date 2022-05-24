@@ -27,6 +27,24 @@ api:
       base-url: http://localhost:8080${server.servlet.context-path}
   endpoint-games: games
   version-one: /v1
+  version-one-async: /v1.1
   version-two: /v2
+  version-two-async: /v2.1
   license-name: The GNU General Public License, Version 3
   license-url: https://www.gnu.org/licenses/gpl-3.0.txt
+
+# Application configuration
+app:
+  # Executor configuration
+  executor:
+    core-pool-size: 2
+    max-pool-size: 2
+    queue-capacity: 500
+    thread-name-prefix: async-thread
+  # Kafka configuration
+  kafka:
+    dlq-topic-name: DLT.RPS.QRY
+    dlq-partition-count: 1
+    dlq-partition-number: 0
+    retries-number: 2
+    retries-delay-interval: 1

@@ -42,6 +42,7 @@ public class RpsEventConsumer {
         log.info("CONSUMER-JSON: Received game played event with id {} from topic {} with key {}, offset {} and timestamp {} from partition {} ",
                 event.getId(), topic, key, offset, ts, partitionId);
         this.eventHandler.on(event);
+        log.debug("Commit message {} immediately", event.getId());
         ack.acknowledge();
     }
 
@@ -59,6 +60,7 @@ public class RpsEventConsumer {
         log.info("CONSUMER-JSON: Received game deleted event with id {} from topic {} with key {}, offset {} and timestamp {} from partition {} ",
                 event.getId(), topic, key, offset, ts, partitionId);
         this.eventHandler.on(event);
+        log.debug("Commit message {} immediately", event.getId());
         ack.acknowledge();
     }
 }

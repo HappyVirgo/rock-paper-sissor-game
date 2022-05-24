@@ -1,0 +1,100 @@
+version: "3.8"
+
+services:
+  # Elasticsearch stores and indexes the data.
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ELASTIC_HOSTNAME}
+    restart: always
+    ports:
+      - 9200:9200 # Elasticsearch HTTP, docker host port / container port
+      - 9300:9300 # Elasticsearch TCP transport, docker host port / container port
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      # Bootstrap password.
+      # Used to initialize the keystore during the initial startup of
+      # Elasticsearch. Ignored on subsequent runs.
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      - discovery.type=single-node
+    volumes:
+      - ~/infrastructure/elasticsearch/elasticsearch.yml:/etc/elasticsearch/config/elasticsearch.yml
+      - elasticsearch-data:/usr/share/elasticsearch/data # Persistence data
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  # Logstash is used to collect, parse, transform, and buffer data from a variety of sources.
+  logstash:
+    container_name: logstash
+    image: logstash:${ELASTIC_VERSION}
+    hostname: ${LOGSTASH_HOSTNAME}
+    restart: always
+    ports:
+      - 5044:5044 # Logstash Beats input
+      - 50000:50000/tcp
+      - 50000:50000/udp
+      - 9600:9600
+    environment:
+      - LS_JAVA_OPTS=-Xms256m -Xmx256m
+      - LOGSTASH_INTERNAL_PASSWORD=${LOGSTASH_INTERNAL_PASSWORD}
+    volumes:
+      - ~/infrastructure/logstash:/etc/logstash # Pipeline configuration
+    depends_on:
+      - elasticsearch
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  # Kibana acts as an analytics and visualization layer on top of Elasticsearch.
+  kibana:
+    container_name: kibana
+    image: kibana:${ELASTIC_VERSION}
+    hostname: ${KIBANA_HOSTNAME}
+    restart: always
+    ports:
+      - 5601:5601 # docker host port / container port
+    environment:
+      - KIBANA_SYSTEM_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
+    volumes:
+      - ~/infrastructure/kibana/config:/etc/kibana/config
+    depends_on:
+      - elasticsearch
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  filebeat:
+    container_name: filebeat
+    image: elastic/filebeat:${ELASTIC_VERSION}
+    hostname: ${FILEBEAT_HOSTNAME}
+    restart: always
+    user: root # Allow access to log files and docker.sock
+    volumes:
+      - ~/infrastructure/filebeat:/etc/filebeat  # Configuration file
+      - /var/lib/docker/containers:/var/lib/docker/containers    # Docker logs
+      - /var/run/docker.sock:/var/run/docker.sock                # Additional information about containers
+      - filebeat-data:/usr/share/filebeat/data                 # Persistence data
+    depends_on:
+      - logstash
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+# persistent volumes location
+volumes:
+  elasticsearch-data:
+    driver: local
+  filebeat-data:
+    driver: local
+
+# networks
+networks:
+  rps_net:
+    name: ${BACKEND_NETWORK}

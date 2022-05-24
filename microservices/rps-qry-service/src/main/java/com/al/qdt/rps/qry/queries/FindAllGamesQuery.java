@@ -4,5 +4,5 @@ import com.al.qdt.cqrs.queries.BaseQuery;
 import lombok.Value;
 
 @Value
-public class FindAllGamesQuery extends BaseQuery {
+public class FindAllGamesQuery implements BaseQuery {
 }

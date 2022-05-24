@@ -10,6 +10,7 @@ import com.al.qdt.score.qry.queries.FindScoresByWinnerQuery;
 import com.al.qdt.score.qry.services.mappers.ScoreDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +22,20 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "scoresCache")
 public class ScoreServiceV1Impl implements ScoreServiceV1 {
     private final QueryDispatcher queryDispatcher;
     private final ScoreDtoMapper scoreDtoMapper;
 
     @Override
-    public Collection<ScoreDto> all() {
+    @Cacheable(cacheNames = "scores", sync = true)
+    public Iterable<ScoreDto> all() {
         log.info("SERVICE: Getting all scores.");
         return this.toListOfScoreDto(this.queryDispatcher.send(new FindAllScoresQuery()));
     }
 
     @Override
-    @Cacheable(value = "scores", key = "#id.toString()", sync = true)
+    @Cacheable(cacheNames = "score", key = "#id.toString()", sync = true)
     public ScoreDto findById(UUID id) {
         log.info("SERVICE: Finding scores by id: {}.", id.toString());
         final List<Score> scores = this.queryDispatcher.send(new FindScoreByIdQuery(id));
@@ -40,7 +43,8 @@ public class ScoreServiceV1Impl implements ScoreServiceV1 {
     }
 
     @Override
-    public Collection<ScoreDto> findByWinner(Player winner) {
+    @Cacheable(cacheNames = "winners", key = "#winner.name()", sync = true)
+    public Iterable<ScoreDto> findByWinner(Player winner) {
         log.info("SERVICE: Finding scores by winner: {}.", winner);
         return this.toListOfScoreDto(this.queryDispatcher.send(new FindScoresByWinnerQuery(winner.name())));
     }
@@ -51,9 +55,9 @@ public class ScoreServiceV1Impl implements ScoreServiceV1 {
      * @param scores scores
      * @return collection of score dto objects
      */
-    private Collection<ScoreDto> toListOfScoreDto(Collection<Score> scores) {
+    private Iterable<ScoreDto> toListOfScoreDto(Iterable<Score> scores) {
         final List<ScoreDto> scoreDtoList = new ArrayList<>();
-        scores.forEach((score) -> scoreDtoList.add(this.scoreDtoMapper.toDto(score)));
+        scores.forEach(score -> scoreDtoList.add(this.scoreDtoMapper.toDto(score)));
         return scoreDtoList;
     }
 }

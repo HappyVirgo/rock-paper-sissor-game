@@ -11,6 +11,7 @@ import com.al.qdt.rps.qry.services.mappers.GameProtoMapper;
 import com.google.protobuf.StringValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +23,20 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "gamesCache")
 public class RpsServiceV2Impl implements RpsServiceV2 {
     private final QueryDispatcher queryDispatcher;
     private final GameProtoMapper gameProtoMapper;
 
     @Override
+    @Cacheable(cacheNames = "gamesProto", sync = true)
     public ListOfGamesResponse all() {
         log.info("SERVICE: Getting all games...");
         return this.toListOfGameDto(this.queryDispatcher.send(new FindAllGamesQuery()));
     }
 
     @Override
-    @Cacheable(value = "games", key = "#id.toString()", sync = true)
+    @Cacheable(cacheNames = "gameProto", key = "#id.toString()", sync = true)
     public GameDto findById(UUID id) {
         log.info("SERVICE: Finding game by id: {}.", id.toString());
         final List<Game> games = this.queryDispatcher.send(new FindGameByIdQuery(id));
@@ -41,6 +44,7 @@ public class RpsServiceV2Impl implements RpsServiceV2 {
     }
 
     @Override
+    @Cacheable(cacheNames = "usernameProto", key = "#username", sync = true)
     public ListOfGamesResponse findByUsername(StringValue username) {
         final var gameUsername = username.getValue();
         log.info("SERVICE: Finding game by username: {}.", gameUsername);
@@ -53,9 +57,9 @@ public class RpsServiceV2Impl implements RpsServiceV2 {
      * @param games games
      * @return collection of game dto objects
      */
-    private ListOfGamesResponse toListOfGameDto(Collection<Game> games) {
+    private ListOfGamesResponse toListOfGameDto(Iterable<Game> games) {
         final List<GameDto> gameDtoList = new ArrayList<>();
-        games.forEach((game) -> gameDtoList.add(this.gameProtoMapper.toDto(game)));
+        games.forEach(game -> gameDtoList.add(this.gameProtoMapper.toDto(game)));
         return ListOfGamesResponse.newBuilder()
                 .addAllGames(gameDtoList)
                 .build();

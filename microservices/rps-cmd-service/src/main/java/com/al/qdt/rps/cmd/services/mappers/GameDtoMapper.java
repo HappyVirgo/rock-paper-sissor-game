@@ -8,9 +8,7 @@ import com.al.qdt.rps.cmd.exceptions.InvalidUserInputException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
 
-@Component
 @Mapper(config = CommonConfig.class)
 public interface GameDtoMapper {
 

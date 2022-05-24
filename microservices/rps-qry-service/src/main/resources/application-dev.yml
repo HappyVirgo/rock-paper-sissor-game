@@ -51,6 +51,18 @@ spring:
     consumer:
       bootstrap-servers: localhost:9092
 
+  # Cache configuration
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+  # Redis configuration
+  redis:
+    host: localhost
+    password: 12345
+    port: 6379
+
 # Actuator configuration
 management:
   endpoints:
@@ -58,6 +70,9 @@ management:
       exposure:
         # exposing all endpoints
         include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 # Show bind values
 logging.level.org.hibernate.type.descriptor.sql: trace

@@ -43,6 +43,7 @@ public class ScoreEventConsumer {
         log.info("CONSUMER-JSON: Received scores added event with id {} from topic {} with key {}, offset {} and timestamp {} from partition {} ",
                 event.getId(), topic, key, offset, ts, partitionId);
         this.eventHandler.on(event);
+        log.debug("Commit message {} immediately", event.getId());
         ack.acknowledge();
     }
 
@@ -77,6 +78,7 @@ public class ScoreEventConsumer {
         log.info("CONSUMER-JSON: Received game deleted event with id {} from topic {} with key {}, offset {} and timestamp {} from partition {} ",
                 event.getId(), topic, key, offset, ts, partitionId);
         this.eventHandler.on(event);
+        log.debug("Commit message {} immediately", event.getId());
         ack.acknowledge();
     }
 }

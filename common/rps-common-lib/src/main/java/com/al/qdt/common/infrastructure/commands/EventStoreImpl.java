@@ -38,7 +38,7 @@ public class EventStoreImpl implements EventStore {
      */
     @Override
     public void saveEvents(UUID aggregateId, String aggregateType, Iterable<BaseEvent> events) {
-        events.forEach((event) -> {
+        events.forEach(event -> {
             final var eventModel = Event.builder()
                     .aggregateId(aggregateId)
                     .aggregateType(aggregateType)

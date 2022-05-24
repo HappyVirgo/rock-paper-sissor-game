@@ -16,6 +16,8 @@ import java.util.stream.Stream;
  */
 @Configuration
 @Import({AppCmdConfig.class,
+        AsyncConfig.class,
+        FilterConfig.class,
         WebMvcCmdConfig.class,
         OpenApiConfig.class,
         MongoConfig.class,

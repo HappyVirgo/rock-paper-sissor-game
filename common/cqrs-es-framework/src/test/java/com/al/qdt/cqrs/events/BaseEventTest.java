@@ -22,7 +22,7 @@ class BaseEventTest {
 
     @Test
     @DisplayName("Testing getId() method")
-    public void getIdTest() {
+    void getIdTest() {
         when(this.baseEvent.getId()).thenReturn(TEST_ID);
 
         assertEquals(TEST_ID, this.baseEvent.getId());

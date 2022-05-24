@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Value
 @AllArgsConstructor
-public class FindScoreByIdQuery extends BaseQuery {
+public class FindScoreByIdQuery implements BaseQuery {
     public static final String ID_MUST_NOT_BE_NULL = "Identification must not be null";
 
     @NotNull(message = ID_MUST_NOT_BE_NULL)

@@ -18,32 +18,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.UUID;
 
-import static com.al.qdt.common.helpers.Constants.GAMES_BY_USER_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.GAMES_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.GAMES_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.GAME_BY_ID_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.GAME_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.MALFORMED_JSON;
-import static com.al.qdt.common.helpers.Constants.TEST_ID;
-import static com.al.qdt.common.helpers.Constants.USERNAME_ONE;
+import static com.al.qdt.common.helpers.Constants.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Controller for managing game rounds.
  */
-@Slf4j
+@Slf4j(topic = "outbound-logs")
 @RestController
 @RequestMapping(path = "${api.version-one}/${api.endpoint-games}", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -89,7 +77,7 @@ public class RpsControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Timed(value = "game.all", description = "Time taken to return all games", longTask = true)
-    public Collection<GameDto> all() {
+    public Iterable<GameDto> all() {
         log.info("REST CONTROLLER: Getting all games...");
         return this.rpsService.all();
     }
@@ -143,7 +131,7 @@ public class RpsControllerV1 {
     @GetMapping(path = "/{id}")
     @Timed(value = "game.findById", description = "Time taken to find game by id", longTask = true)
     public GameDto findById(@Parameter(description = "Id of game that needs to be fetched", example = TEST_ID, required = true)
-                                @Valid @NotNull @PathVariable(value = "id") UUID id) {
+                            @Valid @NotNull @PathVariable(value = "id") UUID id) {
         log.info("REST CONTROLLER: Finding game by id: {}.", id.toString());
         return this.rpsService.findById(id);
     }
@@ -195,8 +183,8 @@ public class RpsControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/users/{username}")
     @Timed(value = "game.findByUsername", description = "Time taken to find games by winner", longTask = true)
-    public Collection<GameDto> findByUsername(@Parameter(description = "Username of games that need to be fetched", example = USERNAME_ONE, required = true)
-                                                  @Valid @NotBlank @PathVariable(value = "username") String username)
+    public Iterable<GameDto> findByUsername(@Parameter(description = "Username of games that need to be fetched", example = USERNAME_ONE, required = true)
+                                            @Valid @NotBlank @PathVariable(value = "username") String username)
             throws GameNotFoundException {
         log.info("REST CONTROLLER: Finding game by username: {}.", username);
         return this.rpsService.findByUsername(username);

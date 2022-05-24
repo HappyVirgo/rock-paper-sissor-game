@@ -3,11 +3,7 @@ package com.al.qdt.rps.qry.repositories;
 import com.al.qdt.rps.qry.base.EntityTests;
 import com.al.qdt.rps.qry.config.TestConfig;
 import com.al.qdt.rps.qry.domain.Game;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -29,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @Import(TestConfig.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("it")
 @DisplayName("Integration testing of the GameRepository interface")
 @Tag(value = "repository")
@@ -56,6 +53,7 @@ class GameRepositoryIT implements EntityTests {
         this.expectedGame = null;
     }
 
+    @Order(1)
     @Test
     @DisplayName("Testing injections")
     void injectionTest() {

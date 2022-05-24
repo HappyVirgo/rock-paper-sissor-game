@@ -3,7 +3,6 @@ package com.al.qdt.score.qry.services;
 import com.al.qdt.common.dto.ScoreDto;
 import com.al.qdt.common.enums.Player;
 
-import java.util.Collection;
 import java.util.UUID;
 
 public interface ScoreServiceV1 {
@@ -13,7 +12,7 @@ public interface ScoreServiceV1 {
      *
      * @return collection of scores
      */
-    Collection<ScoreDto> all();
+    Iterable<ScoreDto> all();
 
     /**
      * Finds score by id.
@@ -29,5 +28,5 @@ public interface ScoreServiceV1 {
      * @param player winner
      * @return found scores
      */
-    Collection<ScoreDto> findByWinner(Player player);
+    Iterable<ScoreDto> findByWinner(Player player);
 }

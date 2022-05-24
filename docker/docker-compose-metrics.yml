@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  # Prometheus (metrics database) - http://<host-ip>:9090
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    hostname: ${PROMETHEUS_HOSTNAME}
+    restart: always
+    ports:
+      - 9090:9090 # docker host port / container port
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
+    extra_hosts:
+      - host.docker.internal:host-gateway # this is to allow a process inside the Docker container to see a process outsite
+    volumes:
+      - ~/infrastructure/prometheus:/etc/prometheus
+      - prometheus-data:/etc/prometheus # creating a volume to save Prometheus data locally
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  # Grafana (visualize metrics) - http://<host-ip>:3000
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    hostname: ${GF_HOSTNAME}
+    restart: always
+    user: "104" # setting up the user to use over the Docker container to allow reads/writes over disk
+    ports:
+      - 3000:3000 # docker host port / container port
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ~/infrastructure/grafana/provisioning:/etc/grafana/provisioning
+      - grafana-data:/var/lib/grafana # creating a volume to save Grafana data locally
+    depends_on:
+      - prometheus
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+# persistent volumes location
+volumes:
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+# networks
+networks:
+  rps_net:
+    name: ${BACKEND_NETWORK}

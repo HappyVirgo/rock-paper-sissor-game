@@ -22,23 +22,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.UUID;
 
-import static com.al.qdt.common.helpers.Constants.MALFORMED_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORES_BY_WINNER_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORES_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORES_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORE_BY_ID_NOT_FOUND_JSON;
-import static com.al.qdt.common.helpers.Constants.SCORE_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.TEST_ID;
-import static com.al.qdt.common.helpers.Constants.TEST_WINNER;
+import static com.al.qdt.common.helpers.Constants.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Controller for managing game scores.
  */
-@Slf4j(topic = "SAVE-TO-FILE")
+@Slf4j(topic = "outbound-logs")
 @RestController
 @RequestMapping(path = "${api.version-one}/${api.endpoint-scores}", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -83,7 +75,7 @@ public class ScoreControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Timed(value = "score.all", description = "Time taken to return all scores", longTask = true)
-    public Collection<ScoreDto> all() {
+    public Iterable<ScoreDto> all() {
         log.info("REST CONTROLLER: Getting all scores.");
         return this.scoreService.all();
     }
@@ -188,7 +180,7 @@ public class ScoreControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/users/{winner}")
     @Timed(value = "score.findByWinner", description = "Time taken to find scores by winner type", longTask = true)
-    public Collection<ScoreDto> findByWinner(
+    public Iterable<ScoreDto> findByWinner(
             @Parameter(description = "Winner of scores that need to be fetched", example = TEST_WINNER, required = true)
             @Valid @NotNull @PathVariable(value = "winner") Player winner) {
         log.info("REST CONTROLLER: Finding scores by winner: {}.", winner);

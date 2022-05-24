@@ -4,9 +4,7 @@ import com.al.qdt.common.dto.GameDto;
 import com.al.qdt.common.mappers.CommonConfig;
 import com.al.qdt.rps.qry.domain.Game;
 import org.mapstruct.Mapper;
-import org.springframework.stereotype.Component;
 
-@Component
 @Mapper(config = CommonConfig.class)
 public interface GameDtoMapper {
 

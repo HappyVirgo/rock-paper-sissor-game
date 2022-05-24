@@ -1,0 +1,75 @@
+# Global configuration, like how often it will scrape its targets.
+global:
+  scrape_interval: 5s # By default, scrape targets every 5 seconds.
+  evaluation_interval: 5s # By default, scrape targets every 5 seconds.
+
+# We can declare rule files, so when we meet a certain condition, we get an alert.
+rule_files:
+# - "first.rules"
+# - "second.rules"
+
+# Which services it needs to monitor.
+scrape_configs:
+  # Here it's Prometheus itself.
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    # metrics_path defaults to '/metrics'
+    static_configs:
+      # scheme defaults to 'http'
+      - targets: [ 'host.docker.internal:9090' ]
+        labels:
+          application: 'Prometheus Application'
+
+  # Here it's RPS Command microservice.
+  - job_name: 'rps-cmd-service'
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    # Prometheus expects the data of our targets to be exposed on the /actuator/prometheus endpoint.
+    metrics_path: '/actuator/prometheus'
+    # Target endpoint. We are using the docker, so localhost will not work.
+    static_configs:
+      # scheme defaults to 'http'
+      - targets: [ 'host.docker.internal:8080' ]
+        labels:
+          application: 'RPS Command microservice'
+
+  # Here it's RPS Query microservice.
+  - job_name: 'rps-qry-service'
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    # Prometheus expects the data of our targets to be exposed on the /actuator/prometheus endpoint.
+    metrics_path: '/actuator/prometheus'
+    # Target endpoint. We are using the docker, so localhost will not work.
+    static_configs:
+      # scheme defaults to 'http'
+      - targets: [ 'host.docker.internal:8081' ]
+        labels:
+          application: 'RPS Query microservice'
+
+  # Here it's Score Command microservice.
+  - job_name: 'score-cmd-service'
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    # Prometheus expects the data of our targets to be exposed on the /actuator/prometheus endpoint.
+    metrics_path: '/actuator/prometheus'
+    # Target endpoint. We are using the docker, so localhost will not work.
+    static_configs:
+      # scheme defaults to 'http'
+      - targets: [ 'host.docker.internal:8082' ]
+        labels:
+          application: 'Score Command microservice'
+
+  # Here it's Score Query microservice.
+  - job_name: 'score-qry-service'
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    # Prometheus expects the data of our targets to be exposed on the /actuator/prometheus endpoint.
+    metrics_path: '/actuator/prometheus'
+    # Target endpoint. We are using the docker, so localhost will not work.
+    static_configs:
+      # scheme defaults to 'http'
+      - targets: [ 'host.docker.internal:8083' ]
+        labels:
+          application: 'Score Query microservice'
