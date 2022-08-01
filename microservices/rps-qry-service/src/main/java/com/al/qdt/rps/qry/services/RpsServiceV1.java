@@ -2,7 +2,6 @@ package com.al.qdt.rps.qry.services;
 
 import com.al.qdt.common.dto.GameDto;
 
-import java.util.Collection;
 import java.util.UUID;
 
 public interface RpsServiceV1 {
@@ -12,7 +11,7 @@ public interface RpsServiceV1 {
      *
      * @return collection of games
      */
-    Collection<GameDto> all();
+    Iterable<GameDto> all();
 
     /**
      * Finds game by id.
@@ -28,5 +27,5 @@ public interface RpsServiceV1 {
      * @param username username
      * @return found games
      */
-    Collection<GameDto> findByUsername(String username);
+    Iterable<GameDto> findByUsername(String username);
 }

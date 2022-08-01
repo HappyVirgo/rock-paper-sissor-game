@@ -1,11 +1,6 @@
 package com.al.qdt.score.qry.config;
 
-import com.al.qdt.common.config.AppQryConfig;
-import com.al.qdt.common.config.ErrorHandlingConfig;
-import com.al.qdt.common.config.MicrometerConfig;
-import com.al.qdt.common.config.OpenApiConfig;
-import com.al.qdt.common.config.ProtoConfig;
-import com.al.qdt.common.config.WebMvcQryConfig;
+import com.al.qdt.common.config.*;
 import com.al.qdt.common.kafka.KafkaConsumerConfig;
 import com.al.qdt.score.qry.repositories.ScoreRepository;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +18,8 @@ import javax.persistence.EntityManagerFactory;
  */
 @Configuration
 @Import({AppQryConfig.class,
+        AsyncConfig.class,
+        FilterConfig.class,
         WebMvcQryConfig.class,
         OpenApiConfig.class,
         KafkaConsumerConfig.class,

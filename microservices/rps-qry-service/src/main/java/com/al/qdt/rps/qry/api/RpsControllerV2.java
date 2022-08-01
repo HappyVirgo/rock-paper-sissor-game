@@ -43,7 +43,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 /**
  * Controller for managing game rounds.
  */
-@Slf4j
+@Slf4j(topic = "outbound-logs")
 @RestController
 @RequestMapping(path = "${api.version-two}/${api.endpoint-games}", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

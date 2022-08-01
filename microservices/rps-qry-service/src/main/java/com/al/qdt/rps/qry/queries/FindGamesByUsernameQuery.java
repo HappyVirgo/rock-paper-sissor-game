@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Value
 @AllArgsConstructor
-public class FindGamesByUsernameQuery extends BaseQuery {
+public class FindGamesByUsernameQuery implements BaseQuery {
     public static final String USERNAME_MUST_NOT_BE_BLANK = "Username must not be null or empty";
 
     @NotBlank(message = USERNAME_MUST_NOT_BE_BLANK)

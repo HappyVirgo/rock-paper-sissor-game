@@ -33,8 +33,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Dependencies -->
-        <grpc.version>1.32.1</grpc.version>
-        <protobuf.version>3.12.0</protobuf.version>
+        <grpc.version>1.35.0</grpc.version>
+        <protobuf.version>3.14.0</protobuf.version>
         <javax.annotation-api.version>1.2</javax.annotation-api.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <!-- Plugins -->
@@ -265,6 +265,11 @@
                     <useArgumentFile>true</useArgumentFile>
                     <clearOutputDirectory>false</clearOutputDirectory>
                     <checkStaleness>true</checkStaleness>
+                    <!--
+                     The version of protoc must match protobuf-java. If you don't depend on
+                     protobuf-java directly, you will be transitively depending on the
+                     protobuf-java version that grpc depends on.
+                    -->
                     <protocArtifact>
                         com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
                     </protocArtifact>
@@ -408,9 +413,6 @@
                     <outputDirectory>${project.build.directory}/${github-staging-repo}</outputDirectory>
                     <!-- Remote branch (that is used as Nexus OSS repo) name -->
                     <branch>refs/heads/${github-staging-repo}</branch>
-                    <!-- If you remove this then the old artifact will be removed and new
-                          one will replace. But with the merge tag you can just release by changing the version -->
-                    <!--                    <merge>true</merge>-->
                     <includes>
                         <include>**/*</include>
                     </includes>

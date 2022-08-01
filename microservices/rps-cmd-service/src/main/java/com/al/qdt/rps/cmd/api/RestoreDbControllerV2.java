@@ -19,18 +19,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.al.qdt.common.helpers.Constants.BASE_RESPONSE_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.HANDLER_ERROR_JSON;
-import static com.al.qdt.common.helpers.Constants.MULTIPLE_HANDLERS_ERROR_JSON;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import java.util.concurrent.CompletableFuture;
 
+import static com.al.qdt.common.helpers.Constants.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Controller for managing database.
  */
-@Slf4j
+@Slf4j(topic = "outbound-logs")
 @RestController
-@RequestMapping(path = "${api.version-two}/${api.endpoint-admin}")
+@RequestMapping
 @RequiredArgsConstructor
 @Timed("admin")
 @Tag(name = "Admin", description = "the admin command REST API endpoints")
@@ -74,10 +73,54 @@ public class RestoreDbControllerV2 {
                     ))
     })
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping("${api.version-two}/${api.endpoint-admin}")
     @Timed(value = "admin", description = "Time taken to restore database", longTask = true)
     public BaseResponseDto restoreReadDb() {
         log.info("REST CONTROLLER: Restoring database...");
         return this.adminService.restoreDb();
+    }
+
+    /**
+     * Restoring database asynchronously.
+     *
+     * @return operation result
+     */
+    @Operation(operationId = "restore-db-async-proto",
+            summary = "Restores database asynchronously",
+            description = "Restores database from event storage asynchronously.",
+            tags = {"admin-async"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Successful operation",
+                    content = @Content(
+                            mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = BaseResponseDto.class),
+                            examples = {
+                                    @ExampleObject(
+                                            value = BASE_RESPONSE_EXPECTED_JSON
+                                    )
+                            })),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid request",
+                    content = @Content(
+                            mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ApiError.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "No command handler",
+                                            value = HANDLER_ERROR_JSON
+                                    ),
+                                    @ExampleObject(
+                                            name = "Multiple command handlers",
+                                            value = MULTIPLE_HANDLERS_ERROR_JSON
+                                    )}
+                    ))
+    })
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("${api.version-two-async}/${api.endpoint-admin}")
+    @Timed(value = "admin.async", description = "Time taken to restore database asynchronously", longTask = true)
+    public CompletableFuture<BaseResponseDto> restoreReadDbAsync() {
+        log.info("REST CONTROLLER: Restoring database asynchronously...");
+        return this.adminService.restoreDbAsync();
     }
 }

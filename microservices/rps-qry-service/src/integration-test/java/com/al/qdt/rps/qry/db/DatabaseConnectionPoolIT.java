@@ -3,6 +3,7 @@ package com.al.qdt.rps.qry.db;
 import com.al.qdt.rps.qry.base.AbstractIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ class DatabaseConnectionPoolIT extends AbstractIntegrationTest {
     @Autowired
     DataSource dataSource;
 
+    @Order(1)
     @Test
     @DisplayName("Testing injections")
     void injectionTest() {
@@ -30,7 +32,7 @@ class DatabaseConnectionPoolIT extends AbstractIntegrationTest {
     @Test
     @DisplayName("Testing datasource type")
     void dataSourceTest() {
-        log.info("DataSource: {}", dataSource.getClass().getName());
+        log.debug("DataSource name: {}", dataSource.getClass().getName());
         assertEquals(DATASOURCE_NAME, dataSource.getClass().getName());
     }
 }

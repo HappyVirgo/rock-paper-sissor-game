@@ -25,8 +25,11 @@ The Rock Paper Scissors game project provides infrastructure, REST and gRPC APIs
 * [Mockito 3.9.0](https://site.mockito.org)
 * [Spock 2.1](https://spockframework.org)
 * [Apache Groovy 3.0.9](https://groovy-lang.org)
-* [JaCoCo test coverage](https://www.jacoco.org/jacoco)
-* [Flyway db version control](https://flywaydb.org) 
+* [JaCoCo](https://www.jacoco.org/jacoco) - unit and integration test coverage
+* [Flyway](https://flywaydb.org) - database version control 
+* [Prometheus](https://prometheus.io) - metrics database
+* [Grafana](https://grafana.com) - metrics visualization
+
 ** H2 in-memory database engine is used for dev and it profiles only
 ### 1. Installation of Docker Desktop
 * If [Docker Desktop](https://www.docker.com/products/docker-desktop) is not already installed navigate to the docker website download and install it on your local machine.
@@ -53,13 +56,13 @@ to activate it.
 ```
     > cd docker
 ```
-* Run "docker-compose -f docker-compose-infrastructure.yml up -d" command to deploy necessary infrastructure on docker containers in the background.
+* Run "docker-compose -f docker-compose-infrastructure.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d" command to deploy necessary infrastructure on docker containers in the background.
 ```
-     > docker-compose -f docker-compose-infrastructure.yml up -d
+     > docker-compose -f docker-compose-infrastructure.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d
 ```
-* Make sure that the all necessary infrastructure containers are up and running.
+* Verify that all necessary infrastructure and metrics containers are up and running.
 ```
-    > docker ps
+    > docker-compose -f docker-compose-infrastructure.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml ps
 ```
 ### 3. Building of the necessary common libraries
 * Navigate to the common/rps-grpc-lib directory on your computer.
@@ -182,6 +185,9 @@ For testing REST API, you can also consider the following options:
 For testing MongoDB, you can also consider the following options:
 * [Compass GUI for MongoDB](https://www.mongodb.com/products/compass)
 * [Robo 3T for MongoDB](https://robomongo.org)
+
+To get an idea of HTTP/2 performance, you can follow the link below:
+* [HTTP/2 Demo](http://www.http2demo.io)
 ### Microservice patterns used
 * [Command Query Responsibility Segregation (CQRS)](https://microservices.io/patterns/data/cqrs.html) - [Event sourcing (ES)](https://microservices.io/patterns/data/event-sourcing.html)
 * [Database per service](https://microservices.io/patterns/data/database-per-service.html)

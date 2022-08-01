@@ -39,12 +39,12 @@
         <hibernate-core.version>5.6.1.Final</hibernate-core.version>
         <hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
         <kafka.version>2.8.1</kafka.version>
-        <protobuf-java.version>3.19.1</protobuf-java.version>
+        <protobuf-java.version>3.14.0</protobuf-java.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <lombok.version>1.18.22</lombok.version>
         <swagger-annotations.version>2.1.12</swagger-annotations.version>
         <springdoc-openapi-ui.version>1.6.5</springdoc-openapi-ui.version>
-        <grpc.version>1.32.1</grpc.version>
+        <grpc.version>1.35.0</grpc.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <!-- Plugins -->
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
@@ -501,9 +501,6 @@
                     <outputDirectory>${project.build.directory}/${github-staging-repo}</outputDirectory>
                     <!-- Remote branch (that is used as Nexus OSS repo) name -->
                     <branch>refs/heads/${github-staging-repo}</branch>
-                    <!-- If you remove this then the old artifact will be removed and new
-                          one will replace. But with the merge tag you can just release by changing the version -->
-                    <!--                    <merge>true</merge>-->
                     <includes>
                         <include>**/*</include>
                     </includes>

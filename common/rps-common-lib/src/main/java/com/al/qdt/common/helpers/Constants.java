@@ -9,15 +9,15 @@ import static com.al.qdt.common.infrastructure.commands.CommandDispatcherImpl.SE
 
 @UtilityClass
 public class Constants {
-    public static final String USERNAME_ONE = "User1"; // first test username
-    public static final String USERNAME_TWO = "User2"; // second test username
     public static final int PASSWORD_STRENGTH = 12; // password encryption length
     public static final long MAX_AGE_SECS = 3600L; // indicates how long the results of a request can be cached
-    public static final UUID TEST_UUID = UUID.fromString("748873ec-f887-4090-93ff-f8b8cbb34c7a");
-    public static final UUID TEST_UUID_TWO = UUID.fromString("898873ec-f887-4090-93ff-f8b8cbb34c7a");
+    public static final String USERNAME_ONE = "User1"; // first test username
+    public static final String USERNAME_TWO = "User2"; // second test username
     public static final String TEST_ID = "748873ec-f887-4090-93ff-f8b8cbb34c7a";
     public static final String TEST_WINNER = "USER";
-    public final static String SUCCESS_MESSAGE = "Database restore request completed successfully!";
+    public static final String SUCCESS_MESSAGE = "Database restore request completed successfully!";
+    public static final UUID TEST_UUID = UUID.fromString(TEST_ID);
+    public static final UUID TEST_UUID_TWO = UUID.fromString("898873ec-f887-5090-93ff-f8b8cbb34c7a");
 
     // kafka testing properties
     public static final String TEST_KEY = "1";
@@ -26,9 +26,9 @@ public class Constants {
     public static final String OUTPUT_TOPIC_PREFIX = "output_";
     public static final String EMPTY_TOPIC_EXCEPTION_MESSAGE = "Error occurred, empty topic: %s";
     public static final String TEST_TIMESTAMP = "2021-10-12T00:00:00Z";
-    public static final long POLLING_INTERVAL = 100L;
     public static final String EXECUTION_EXCEPTION_MESSAGE = "Error occurred while sending an event to Kafka topic.";
     public static final String INTERRUPTION_EXCEPTION_MESSAGE = "This thread was interrupted...";
+    public static final long POLLING_INTERVAL = 100L;
 
     // dto serialization/deserialization testing properties
     public static final String BASE_RESPONSE_EXPECTED_JSON = "{\"message\":\"Database restore request completed successfully!\"}";

@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.test.context.ActiveProfiles
 import spock.lang.PendingFeature
 import spock.lang.Specification
+import spock.lang.Stepwise
 import spock.lang.Subject
 import spock.lang.Title
 
@@ -18,6 +19,7 @@ import static com.al.qdt.common.helpers.Constants.TEST_UUID
 
 @DataJpaTest
 @Import([TestConfig])
+@Stepwise
 @ActiveProfiles("it")
 @Title("Integration testing of the ScoreRepository interface")
 class ScoreRepositoryITSpec extends Specification implements EntityTests {
@@ -28,11 +30,6 @@ class ScoreRepositoryITSpec extends Specification implements EntityTests {
     @Subject
     @Autowired
     ScoreRepository scoreRepository
-
-    def 'Testing injections'() {
-        expect:
-        assert scoreRepository
-    }
 
     // Run before every feature method
     def setup() {
@@ -48,6 +45,11 @@ class ScoreRepositoryITSpec extends Specification implements EntityTests {
     def cleanup() {
         scoreRepository.deleteAll()
         expectedScore = null
+    }
+
+    def 'Testing injections'() {
+        expect:
+        assert scoreRepository
     }
 
     def 'Testing database init count'() {

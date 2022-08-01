@@ -48,16 +48,16 @@
         <spring-security-oauth2-autoconfigure.version>2.6.2</spring-security-oauth2-autoconfigure.version>
         <spring-security-jwt.version>1.1.0.RELEASE</spring-security-jwt.version>
         <kafka.version>2.8.1</kafka.version>
-        <protobuf-java.version>3.19.1</protobuf-java.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <mockito.version>3.9.0</mockito.version>
         <embed.mongo.version>3.2.6</embed.mongo.version>
-        <grpc.version>1.32.1</grpc.version>
+        <grpc.version>1.35.0</grpc.version>
         <spock.version>2.1-M2-groovy-3.0</spock.version>
         <flyway-mysql.version>8.4.3</flyway-mysql.version>
         <mock-server.version>3.10.8</mock-server.version>
         <wiremock.version>2.1.12</wiremock.version>
+        <logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
         <!-- Plugins -->
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
@@ -342,6 +342,13 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-services</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- Logstash Encoder for ELK -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
         </dependency>
 
         <!-- RPS game dependencies-->

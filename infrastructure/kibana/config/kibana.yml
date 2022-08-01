@@ -1,0 +1,5 @@
+## Default Kibana configuration from Kibana base image.
+server.name: kibana
+server.host: 0.0.0.0
+elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+monitoring.ui.container.elasticsearch.enabled: true

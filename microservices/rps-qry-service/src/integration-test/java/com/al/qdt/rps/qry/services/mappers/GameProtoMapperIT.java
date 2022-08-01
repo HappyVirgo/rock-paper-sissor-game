@@ -3,6 +3,7 @@ package com.al.qdt.rps.qry.services.mappers;
 import com.al.qdt.rps.qry.base.AbstractIntegrationTest;
 import com.al.qdt.rps.qry.base.EntityTests;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ class GameProtoMapperIT extends AbstractIntegrationTest implements EntityTests {
     @Autowired
     GameProtoMapper gameProtoMapper;
 
+    @Order(1)
     @Test
     @DisplayName("Testing injections")
     void injectionTest() {

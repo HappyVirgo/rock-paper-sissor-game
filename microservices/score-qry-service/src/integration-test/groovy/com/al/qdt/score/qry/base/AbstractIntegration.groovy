@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.transaction.PlatformTransactionManager
 import spock.lang.Specification
+import spock.lang.Stepwise
 
 import java.util.concurrent.ConcurrentHashMap
 
@@ -31,6 +32,7 @@ import static java.util.Optional.ofNullable
 // Ensures that the grpc-server is properly shutdown after each test, avoids "port already in use" during tests
 @DirtiesContext
 @AutoConfigureMockMvc
+@Stepwise
 @ActiveProfiles("it")
 class AbstractIntegration extends Specification implements EntityTests {
     static final SCORE_CACHE_NAME = "scores" // cache name

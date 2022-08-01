@@ -20,6 +20,8 @@ import javax.persistence.EntityManagerFactory;
  */
 @Configuration
 @Import({AppQryConfig.class,
+        AsyncConfig.class,
+        FilterConfig.class,
         WebMvcQryConfig.class,
         OpenApiConfig.class,
         KafkaConsumerConfig.class,

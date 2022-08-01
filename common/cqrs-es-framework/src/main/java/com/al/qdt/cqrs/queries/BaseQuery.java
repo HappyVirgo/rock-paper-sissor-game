@@ -1,4 +1,4 @@
 package com.al.qdt.cqrs.queries;
 
-public abstract class BaseQuery {
+public interface BaseQuery {
 }

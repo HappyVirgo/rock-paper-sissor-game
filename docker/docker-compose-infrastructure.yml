@@ -1,50 +1,58 @@
 version: "3.8"
 
 services:
-  zookeeper:
-    container_name: zookeeper-container
+  zk-1:
+    container_name: zk-1
     image: bitnami/zookeeper:latest
+    hostname: ${ZOOKEEPER_HOSTNAME_1}
     restart: always
     ports:
       - 2181:2181 # docker host port / container port
     environment:
       - ALLOW_ANONYMOUS_LOGIN=${ALLOW_ANONYMOUS_LOGIN}
+      - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_1}
       - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT}
       - ZOOKEEPER_TICK_TIME=${ZOOKEEPER_TICK_TIME}
+      - ZOOKEEPER_INIT_LIMIT=${ZOOKEEPER_INIT_LIMIT}
+      - ZOOKEEPER_SYNC_LIMIT=${ZOOKEEPER_SYNC_LIMIT}
     volumes:
-      - zookeeper_data:/bitnami/zookeeper
+      - zk-log-1-data:/var/lib/zookeeper/log
+      - zk-data-1-data:/var/lib/zookeeper/data # creating a volume to save Zookeeper data locally
     networks:
       - ${BACKEND_NETWORK}
     deploy:
       replicas: 1
 
-  kafka:
-    container_name: kafka-container
+  kafka-1:
+    container_name: kafka-1
     image: bitnami/kafka:latest
+    hostname: ${KAFKA_HOSTNAME_1}
     restart: always
     ports:
       - 9092:9092 # docker host port / container port
     environment:
-      - KAFKA_BROKER_ID=${KAFKA_BROKER_ID}
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:${ZOOKEEPER_CLIENT_PORT}
       - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER}
+      - KAFKA_BROKER_ID=${KAFKA_BROKER_ID}
+      - KAFKA_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1}
       - KAFKA_LISTENERS=${KAFKA_INTER_BROKER_LISTENER_NAME}://:${KAFKA_BROKER_PORT}
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:${KAFKA_BROKER_PORT}
       - KAFKA_INTER_BROKER_LISTENER_NAME=${KAFKA_INTER_BROKER_LISTENER_NAME}
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
       - KAFKA_HEAP_OPTS=-Xmx320m -Xms320m
     volumes:
-      - kafka_data:/bitnami/kafka
+      - kafka-1-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
+      - ~/kafka/mtls/kafka-1-creds:/etc/kafka/secrets
     depends_on:
-      - zookeeper
+      - zk-1
     networks:
       - ${BACKEND_NETWORK}
     deploy:
       replicas: 1
 
   mongo:
-    container_name: mongodb-container
+    container_name: mongodb
     image: mongo:latest
+    hostname: ${MONGO_HOSTNAME}
     restart: always
     ports:
       - 27017:27017 # docker host port / container port
@@ -55,14 +63,14 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME} # the database admin user
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD} # the database admin user password
     volumes:
-      - mongodb_data:/data/db
+      - mongodb-data:/data/db # creating a volume to save MongoDB data locally
     networks:
       - ${BACKEND_NETWORK}
     deploy:
       replicas: 1
 
   mongo-express:
-    container_name: mongo-express-container
+    container_name: mongo-express
     image: mongo-express:latest
     restart: always
     ports:
@@ -85,8 +93,9 @@ services:
       replicas: 1
 
   mariadb:
-    container_name: mariadb-container
+    container_name: mariadb
     image: bitnami/mariadb:latest
+    hostname: ${MARIADB_HOSTNAME}
     restart: always
     ports:
       - 3306:3306 # docker host port / container port
@@ -96,14 +105,14 @@ services:
       - MARIADB_ROOT_USER=${MARIADB_ROOT_USER} # the database admin user
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} # the database admin user password
     volumes:
-      - mariadb_data:/bitnami/mariadb
+      - mariadb-data:/bitnami/mariadb # creating a volume to save MariaDB data locally
     networks:
       - ${BACKEND_NETWORK}
     deploy:
       replicas: 1
 
   adminer:
-    container_name: adminer-container
+    container_name: adminer
     image: adminer:latest
     ports:
       - 9080:8080 # docker host port / container port
@@ -112,17 +121,21 @@ services:
     deploy:
       replicas: 1
 
+  # Redis is a high performance key-value database. It shores cached values.
   cache:
-    container_name: redis-container
-    image: redis:latest
+    container_name: redis
+    image: bitnami/redis:latest
+    hostname: ${REDIS_HOSTNAME}
     restart: always
     ports:
       - 6379:6379 # docker host port / container port
-    command: redis-server --save 20 1 --loglevel warning --requirepass MDNcVb924a
+    command: redis-server --save 20 1 --loglevel warning --protected-mode no --stop-writes-on-bgsave-error no
     environment:
       - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
     volumes:
-      - cache_data:/data
+      - cache-data:/bitnami/redis/data # creating a volume to save Redis data locally
     networks:
       - ${BACKEND_NETWORK}
     deploy:
@@ -130,15 +143,17 @@ services:
 
 # persistent volumes location
 volumes:
-  zookeeper_data:
+  zk-data-1-data:
     driver: local
-  kafka_data:
+  zk-log-1-data:
     driver: local
-  mongodb_data:
+  kafka-1-data:
     driver: local
-  mariadb_data:
+  mongodb-data:
     driver: local
-  cache_data:
+  mariadb-data:
+    driver: local
+  cache-data:
     driver: local
 
 # networks
