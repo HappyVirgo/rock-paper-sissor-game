@@ -19,7 +19,7 @@ spring:
   # Kafka properties
   kafka:
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:9093,localhost:9094,localhost:9095
 
   autoconfigure:
     # Excluding MongoDB

@@ -56,13 +56,13 @@ to activate it.
 ```
     > cd docker
 ```
-* Run "docker-compose -f docker-compose-infrastructure.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d" command to deploy necessary infrastructure on docker containers in the background.
+* Run "docker-compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d" command to deploy necessary infrastructure on docker containers in the background.
 ```
-     > docker-compose -f docker-compose-infrastructure.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d
+     > docker-compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml up -d
 ```
 * Verify that all necessary infrastructure and metrics containers are up and running.
 ```
-    > docker-compose -f docker-compose-infrastructure.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml ps
+    > docker-compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml ps
 ```
 ### 3. Building of the necessary common libraries
 * Navigate to the common/rps-grpc-lib directory on your computer.
@@ -197,9 +197,9 @@ To get an idea of HTTP/2 performance, you can follow the link below:
 * [Application metrics](https://microservices.io/patterns/observability/application-metrics.html)
 * [Messaging](https://microservices.io/patterns/communication-style/messaging.html)
 ### Useful Docker commands
-* When we don't need infrastructure containers anymore, we can shut it down again using the down command:
+* When we don't need infrastructure containers anymore, we can take down containers and delete their corresponding volumes using the down command:
 ```
-     > docker-compose -f docker-compose-infrastructure.yml down
+     > docker-compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml down -v
 ```
 ### BloomRPC Configuration
 * Launch the BloomRPC application.

@@ -1,54 +1,6 @@
 version: "3.8"
 
 services:
-  zk-1:
-    container_name: zk-1
-    image: bitnami/zookeeper:latest
-    hostname: ${ZOOKEEPER_HOSTNAME_1}
-    restart: always
-    ports:
-      - 2181:2181 # docker host port / container port
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=${ALLOW_ANONYMOUS_LOGIN}
-      - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_1}
-      - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT}
-      - ZOOKEEPER_TICK_TIME=${ZOOKEEPER_TICK_TIME}
-      - ZOOKEEPER_INIT_LIMIT=${ZOOKEEPER_INIT_LIMIT}
-      - ZOOKEEPER_SYNC_LIMIT=${ZOOKEEPER_SYNC_LIMIT}
-    volumes:
-      - zk-log-1-data:/var/lib/zookeeper/log
-      - zk-data-1-data:/var/lib/zookeeper/data # creating a volume to save Zookeeper data locally
-    networks:
-      - ${BACKEND_NETWORK}
-    deploy:
-      replicas: 1
-
-  kafka-1:
-    container_name: kafka-1
-    image: bitnami/kafka:latest
-    hostname: ${KAFKA_HOSTNAME_1}
-    restart: always
-    ports:
-      - 9092:9092 # docker host port / container port
-    environment:
-      - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER}
-      - KAFKA_BROKER_ID=${KAFKA_BROKER_ID}
-      - KAFKA_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1}
-      - KAFKA_LISTENERS=${KAFKA_INTER_BROKER_LISTENER_NAME}://:${KAFKA_BROKER_PORT}
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:${KAFKA_BROKER_PORT}
-      - KAFKA_INTER_BROKER_LISTENER_NAME=${KAFKA_INTER_BROKER_LISTENER_NAME}
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
-      - KAFKA_HEAP_OPTS=-Xmx320m -Xms320m
-    volumes:
-      - kafka-1-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
-      - ~/kafka/mtls/kafka-1-creds:/etc/kafka/secrets
-    depends_on:
-      - zk-1
-    networks:
-      - ${BACKEND_NETWORK}
-    deploy:
-      replicas: 1
-
   mongo:
     container_name: mongodb
     image: mongo:latest

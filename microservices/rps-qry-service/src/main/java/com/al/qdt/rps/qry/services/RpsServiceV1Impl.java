@@ -17,23 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.al.qdt.rps.qry.config.CacheConfig.GAMES_CACHE_NAME;
+import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAME;
+import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAMES;
+import static com.al.qdt.rps.qry.config.CacheConfig.USERNAME_CACHE_NAME;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "gamesCache")
+@CacheConfig(cacheNames = GAME_CACHE_NAMES)
 public class RpsServiceV1Impl implements RpsServiceV1 {
     private final QueryDispatcher queryDispatcher;
     private final GameDtoMapper gameDtoMapper;
 
     @Override
-    @Cacheable(cacheNames = "games", sync = true)
+    @Cacheable(cacheNames = GAMES_CACHE_NAME, sync = true)
     public Iterable<GameDto> all() {
         log.info("SERVICE: Getting all games...");
         return this.toListOfGameDto(this.queryDispatcher.send(new FindAllGamesQuery()));
     }
 
     @Override
-    @Cacheable(cacheNames = "game", key = "#id.toString()", sync = true)
+    @Cacheable(cacheNames = GAME_CACHE_NAME, key = "#id.toString()", sync = true)
     public GameDto findById(UUID id) {
         log.info("SERVICE: Finding game by id: {}.", id.toString());
         final List<Game> games = this.queryDispatcher.send(new FindGameByIdQuery(id));
@@ -41,7 +46,7 @@ public class RpsServiceV1Impl implements RpsServiceV1 {
     }
 
     @Override
-    @Cacheable(cacheNames = "username", key = "#username", sync = true)
+    @Cacheable(cacheNames = USERNAME_CACHE_NAME, key = "#username", sync = true)
     public Iterable<GameDto> findByUsername(String username) {
         log.info("SERVICE: Finding game by username: {}.", username);
         return this.toListOfGameDto(this.queryDispatcher.send(new FindGamesByUsernameQuery(username)));

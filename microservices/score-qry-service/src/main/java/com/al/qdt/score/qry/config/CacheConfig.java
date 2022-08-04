@@ -26,12 +26,13 @@ import static com.al.qdt.common.redis.RedisUtils.redisProtoCacheConfiguration;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-    private static final String SCORE_CACHE_NAME = "score";
-    private static final String SCORES_CACHE_NAME = "scores";
-    private static final String SCORE_PROTO_CACHE_NAME = "scoreProto";
-    private static final String SCORES_PROTO_CACHE_NAME = "scoresProto";
-    private static final String WINNERS_CACHE_NAME = "winners";
-    private static final String WINNERS_PROTO_CACHE_NAME = "winnersProto";
+    public static final String SCORE_CACHE_NAMES = "scoresCache";
+    public static final String SCORE_CACHE_NAME = "score";
+    public static final String SCORES_CACHE_NAME = "scores";
+    public static final String SCORE_PROTO_CACHE_NAME = "scoreProto";
+    public static final String SCORES_PROTO_CACHE_NAME = "scoresProto";
+    public static final String WINNERS_CACHE_NAME = "winners";
+    public static final String WINNERS_PROTO_CACHE_NAME = "winnersProto";
     private static final long CACHE_DURATION_MIN = 60L; // cache time to live (TTL)
 
     /**
