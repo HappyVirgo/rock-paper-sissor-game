@@ -95,12 +95,6 @@ services:
 
 # persistent volumes location
 volumes:
-  zk-data-1-data:
-    driver: local
-  zk-log-1-data:
-    driver: local
-  kafka-1-data:
-    driver: local
   mongodb-data:
     driver: local
   mariadb-data:
