@@ -24,12 +24,13 @@ import static com.al.qdt.common.redis.RedisUtils.redisProtoCacheConfiguration;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-    private static final String GAME_CACHE_NAME = "game";
-    private static final String GAMES_CACHE_NAME = "games";
-    private static final String GAME_PROTO_CACHE_NAME = "gameProto";
-    private static final String GAMES_PROTO_CACHE_NAME = "gamesProto";
-    private static final String USERNAME_CACHE_NAME = "username";
-    private static final String USERNAME_PROTO_CACHE_NAME = "usernameProto";
+    public static final String GAME_CACHE_NAMES = "gamesCache";
+    public static final String GAME_CACHE_NAME = "game";
+    public static final String GAMES_CACHE_NAME = "games";
+    public static final String GAME_PROTO_CACHE_NAME = "gameProto";
+    public static final String GAMES_PROTO_CACHE_NAME = "gamesProto";
+    public static final String USERNAME_CACHE_NAME = "username";
+    public static final String USERNAME_PROTO_CACHE_NAME = "usernameProto";
     private static final long CACHE_DURATION_MIN = 60L; // cache time to live (TTL)
 
     /**

@@ -22,7 +22,7 @@ spring:
   # Kafka properties
   kafka:
     producer:
-      bootstrap-servers: kafka-1:9092
+      bootstrap-servers: kafka-1:9093,kafka-2:9094,kafka-3:9095
 
 # Actuator configuration
 management:
