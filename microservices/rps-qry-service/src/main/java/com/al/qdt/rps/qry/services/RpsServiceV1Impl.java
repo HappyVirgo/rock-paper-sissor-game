@@ -17,7 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.al.qdt.rps.qry.config.CacheConfig.*;
+import static com.al.qdt.rps.qry.config.CacheConfig.GAMES_CACHE_NAME;
+import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAME;
+import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAMES;
+import static com.al.qdt.rps.qry.config.CacheConfig.USERNAME_CACHE_NAME;
 
 @Slf4j
 @Service

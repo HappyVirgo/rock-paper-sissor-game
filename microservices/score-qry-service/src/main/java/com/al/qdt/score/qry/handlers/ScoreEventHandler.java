@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 import static com.al.qdt.score.qry.config.CacheConfig.SCORES_CACHE_NAME;
 import static com.al.qdt.score.qry.config.CacheConfig.SCORES_PROTO_CACHE_NAME;

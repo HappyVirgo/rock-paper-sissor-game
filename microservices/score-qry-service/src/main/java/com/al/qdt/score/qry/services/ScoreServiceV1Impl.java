@@ -18,7 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.al.qdt.score.qry.config.CacheConfig.*;
+import static com.al.qdt.score.qry.config.CacheConfig.SCORES_CACHE_NAME;
+import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAME;
+import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAMES;
+import static com.al.qdt.score.qry.config.CacheConfig.WINNERS_CACHE_NAME;
 
 @Slf4j
 @Service

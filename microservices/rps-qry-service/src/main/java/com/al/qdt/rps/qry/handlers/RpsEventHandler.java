@@ -19,6 +19,7 @@ import static com.al.qdt.rps.qry.config.CacheConfig.GAMES_PROTO_CACHE_NAME;
 import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAME;
 import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAMES;
 import static com.al.qdt.rps.qry.config.CacheConfig.GAME_PROTO_CACHE_NAME;
+import static com.al.qdt.rps.qry.exceptions.GameNotFoundException.GAME_BY_ID_NOT_FOUND_EXCEPTION_MESSAGE;
 
 @Slf4j
 @Service
