@@ -9,6 +9,9 @@ import spock.lang.Title
 
 import static com.al.qdt.rps.grpc.v1.common.Player.USER
 import static com.al.qdt.common.helpers.Constants.TEST_UUID
+import static com.al.qdt.score.qry.config.CacheConfig.SCORES_PROTO_CACHE_NAME
+import static com.al.qdt.score.qry.config.CacheConfig.SCORE_PROTO_CACHE_NAME
+import static com.al.qdt.score.qry.config.CacheConfig.WINNERS_PROTO_CACHE_NAME
 
 @Title("Integration testing of the ScoreServiceV2Impl class")
 class ScoreServiceV2ImplTSpec extends AbstractIntegration implements ProtoTests {
@@ -30,19 +33,15 @@ class ScoreServiceV2ImplTSpec extends AbstractIntegration implements ProtoTests 
         noExceptionThrown()
 
         and: 'Data exists in the cache'
-        def actualScore = getCachedScoreDtoById(TEST_UUID, ScoreDto.class).get() as ScoreDto
+        def actualScore = getCachedScoreDtoById(TEST_UUID, ScoreDto.class, SCORE_PROTO_CACHE_NAME).get() as ScoreDto
         assert expectedScore.winner.name() == actualScore.winner
 
         and:
-        "Im-memory cache size is equals to $EXPECTED_COLLECTION_SIZE"
-        assert cacheManager.cacheNames.size() == EXPECTED_COLLECTION_SIZE
-
-        and:
-        "Im-memory cache contains $SCORE_CACHE_NAME cache"
-        assert cacheManager.cacheNames.contains(SCORE_CACHE_NAME)
+        "Im-memory cache contains $SCORE_PROTO_CACHE_NAME cache"
+        assert cacheManager.cacheNames.contains(SCORE_PROTO_CACHE_NAME)
     }
 
-    def 'Testing caching functionality of the all() method, scores should not be cached'() {
+    def 'Testing caching functionality of the all() method, scores should be cached'() {
         when: 'Calling the api'
         def actualScores = scoreService.all()
 
@@ -50,13 +49,13 @@ class ScoreServiceV2ImplTSpec extends AbstractIntegration implements ProtoTests 
         noExceptionThrown()
 
         and: 'List of data returns from server'
-        assert actualScores.getScoresList().size() == EXPECTED_COLLECTION_SIZE
+        assert actualScores.scoresList.size() == EXPECTED_COLLECTION_SIZE
 
-        and: 'Im-memory cache size is empty'
-        assert isEmpty(cacheManager.getCache(SCORE_CACHE_NAME))
+        and: 'Im-memory cache size is not empty'
+        assert !isEmpty(cacheManager.getCache(SCORES_PROTO_CACHE_NAME))
     }
 
-    def 'Testing caching functionality of the findByWinner() method, scores should not be cached'() {
+    def 'Testing caching functionality of the findByWinner() method, scores should be cached'() {
         when: 'Calling the api with right parameter'
         def actualScores = scoreService.findByWinner USER
 
@@ -64,9 +63,9 @@ class ScoreServiceV2ImplTSpec extends AbstractIntegration implements ProtoTests 
         noExceptionThrown()
 
         and: 'List of data returns from server'
-        assert actualScores.getScoresList().size() == EXPECTED_COLLECTION_SIZE
+        assert actualScores.scoresList.size() == EXPECTED_COLLECTION_SIZE
 
-        and: 'Im-memory cache size is empty'
-        assert isEmpty(cacheManager.getCache(SCORE_CACHE_NAME))
+        and: 'Im-memory cache size is not empty'
+        assert !isEmpty(cacheManager.getCache(WINNERS_PROTO_CACHE_NAME))
     }
 }

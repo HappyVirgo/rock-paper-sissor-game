@@ -14,11 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 
-import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
-import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_MESSAGE_KEY;
-import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION_ID;
-import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TIMESTAMP;
-import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
+import static org.springframework.kafka.support.KafkaHeaders.*;
 
 /**
  * Consumer class responsible for reading events from the specified kafka topics.
@@ -32,7 +28,7 @@ public class ScoreEventConsumer {
     @KafkaListener(topics = "ScoresAddedEvent",
             clientIdPrefix = "score-consumer-json-1",
             containerFactory = "kafkaListenerContainerFactory",
-            groupId = "${spring.kafka.consumer.group-id}")
+            groupId = "#{consumerFactory.getConfigurationProperties().get('group.id')}")
     public void consume(@Payload @Valid ScoresAddedEvent event,
                         @Header(name = RECEIVED_MESSAGE_KEY) String key,
                         @Header(RECEIVED_PARTITION_ID) int partitionId,
@@ -50,7 +46,7 @@ public class ScoreEventConsumer {
     @KafkaListener(topics = "ScoresDeletedEvent",
             clientIdPrefix = "score-consumer-json-2",
             containerFactory = "kafkaListenerContainerFactory",
-            groupId = "${spring.kafka.consumer.group-id}")
+            groupId = "#{consumerFactory.getConfigurationProperties().get('group.id')}")
     public void consume(@Payload ScoresDeletedEvent event,
                         @Header(name = RECEIVED_MESSAGE_KEY) String key,
                         @Header(RECEIVED_PARTITION_ID) int partitionId,
@@ -67,7 +63,7 @@ public class ScoreEventConsumer {
     @KafkaListener(topics = "GameDeletedEvent",
             clientIdPrefix = "score-consumer-json-3",
             containerFactory = "kafkaListenerContainerFactory",
-            groupId = "${spring.kafka.consumer.group-id}")
+            groupId = "#{consumerFactory.getConfigurationProperties().get('group.id')}")
     public void consume(@Payload GameDeletedEvent event,
                         @Header(name = RECEIVED_MESSAGE_KEY) String key,
                         @Header(RECEIVED_PARTITION_ID) int partitionId,

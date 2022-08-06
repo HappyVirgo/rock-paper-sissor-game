@@ -50,9 +50,9 @@ public class ScoreServiceV2Impl implements ScoreServiceV2 {
     }
 
     @Override
-    @Cacheable(cacheNames = WINNERS_PROTO_CACHE_NAME, key = "#winner.name()", sync = true)
+    @Cacheable(cacheNames = WINNERS_PROTO_CACHE_NAME, key = "#player.getValueDescriptor().getName()", sync = true)
     public ListOfScoresResponse findByWinner(Player player) {
-        final var winner = player.name();
+        final var winner = player.getValueDescriptor().getName();
         log.info("SERVICE: Finding scores by winner: {}.", winner);
         return this.toListOfScoreDto(this.queryDispatcher.send(new FindScoresByWinnerQuery(winner)));
     }

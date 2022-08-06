@@ -3,6 +3,7 @@ package com.al.qdt.common.kafka;
 import com.al.qdt.common.properties.RpsKafkaProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,6 +24,7 @@ import org.springframework.messaging.handler.invocation.MethodArgumentResolution
 import org.springframework.util.backoff.FixedBackOff;
 
 import javax.validation.ValidationException;
+import java.util.UUID;
 
 import static org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE;
 
@@ -44,7 +46,10 @@ public class KafkaConsumerConfig {
      */
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(this.kafkaProperties.buildConsumerProperties());
+        final var consumerProperties = this.kafkaProperties.buildConsumerProperties();
+        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG,
+                String.format("%s-%s", this.rpsKafkaProperties.getConsumerGroupId(), UUID.randomUUID().toString()));
+        return new DefaultKafkaConsumerFactory<>(consumerProperties);
     }
 
     /**
@@ -56,8 +61,7 @@ public class KafkaConsumerConfig {
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>>
     kafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
-        final ConcurrentKafkaListenerContainerFactory<String, Object> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
+        final var factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
         factory.getContainerProperties().setAckMode(MANUAL_IMMEDIATE);
         // changing logging level of topic offset commits tp INFO
         factory.getContainerProperties().setCommitLogLevel(LogIfLevelEnabled.Level.INFO);

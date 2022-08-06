@@ -11,7 +11,8 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-public abstract class BaseDocument implements Persistable<String> {
+public abstract class
+BaseDocument implements Persistable<String> {
 
     @Id
     protected String id;

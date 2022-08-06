@@ -10,5 +10,6 @@ option java_multiple_files = true;
 
 /* The message definition of the game's round score. */
 message ScoreDto {
-  string winner = 1 [json_name = "winner"]; // winner of the round
+  string id = 1 [json_name = "id"]; // id of the round
+  string winner = 2 [json_name = "winner"]; // winner of the round
 }

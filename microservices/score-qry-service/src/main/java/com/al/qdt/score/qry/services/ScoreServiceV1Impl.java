@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.al.qdt.score.qry.config.CacheConfig.SCORES_CACHE_NAME;
-import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAME;
-import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAMES;
-import static com.al.qdt.score.qry.config.CacheConfig.WINNERS_CACHE_NAME;
+import static com.al.qdt.score.qry.config.CacheConfig.*;
 
 @Slf4j
 @Service
@@ -49,10 +46,11 @@ public class ScoreServiceV1Impl implements ScoreServiceV1 {
     }
 
     @Override
-    @Cacheable(cacheNames = WINNERS_CACHE_NAME, key = "#winner.name()", sync = true)
-    public Iterable<ScoreDto> findByWinner(Player winner) {
+    @Cacheable(cacheNames = WINNERS_CACHE_NAME, key = "#player.name()", sync = true)
+    public Iterable<ScoreDto> findByWinner(Player player) {
+        final var winner = player.name();
         log.info("SERVICE: Finding scores by winner: {}.", winner);
-        return this.toListOfScoreDto(this.queryDispatcher.send(new FindScoresByWinnerQuery(winner.name())));
+        return this.toListOfScoreDto(this.queryDispatcher.send(new FindScoresByWinnerQuery(winner)));
     }
 
     /**

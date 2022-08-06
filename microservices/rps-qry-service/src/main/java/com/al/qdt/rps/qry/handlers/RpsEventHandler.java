@@ -2,7 +2,6 @@ package com.al.qdt.rps.qry.handlers;
 
 import com.al.qdt.common.events.rps.GameDeletedEvent;
 import com.al.qdt.common.events.rps.GamePlayedEvent;
-import com.al.qdt.rps.qry.exceptions.GameNotFoundException;
 import com.al.qdt.rps.qry.repositories.GameRepository;
 import com.al.qdt.rps.qry.services.mappers.GameMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import static com.al.qdt.rps.qry.config.CacheConfig.GAMES_PROTO_CACHE_NAME;
 import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAME;
 import static com.al.qdt.rps.qry.config.CacheConfig.GAME_CACHE_NAMES;
 import static com.al.qdt.rps.qry.config.CacheConfig.GAME_PROTO_CACHE_NAME;
-import static com.al.qdt.rps.qry.exceptions.GameNotFoundException.GAME_BY_ID_NOT_FOUND_EXCEPTION_MESSAGE;
 
 @Slf4j
 @Service
@@ -36,8 +34,11 @@ public class RpsEventHandler implements EventHandler {
             @CacheEvict(cacheNames = GAMES_CACHE_NAME, allEntries = true),
             @CacheEvict(cacheNames = GAMES_PROTO_CACHE_NAME, allEntries = true)})
     public void on(@Valid GamePlayedEvent event) {
-        log.info("Handling game played event with id: {}", event.getId());
-        this.gameRepository.save(this.gameMapper.toEntity(event));
+        final var gameId = event.getId();
+        log.info("Handling game played event with id: {}", gameId);
+        if (!this.gameRepository.existsById(gameId)) {
+            this.gameRepository.save(this.gameMapper.toEntity(event));
+        }
     }
 
     @Override
@@ -48,11 +49,7 @@ public class RpsEventHandler implements EventHandler {
             @CacheEvict(cacheNames = GAMES_PROTO_CACHE_NAME, allEntries = true)})
     public void on(@Valid GameDeletedEvent event) {
         final var gameId = event.getId();
-        log.info("Handling game deleted event with id: {}", gameId.toString());
-        if (this.gameRepository.existsById(gameId)) {
-            this.gameRepository.deleteById(gameId);
-            return;
-        }
-        throw new GameNotFoundException(String.format(GAME_BY_ID_NOT_FOUND_EXCEPTION_MESSAGE, gameId.toString()));
+        log.info("Handling game deleted event with id: {}", gameId);
+        this.gameRepository.deleteById(gameId);
     }
 }

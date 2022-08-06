@@ -15,6 +15,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class RpsKafkaProperties {
     private String dlqTopicName; // name of the dlq topic
 
+    private String consumerGroupId; // consumer group id
+
     private Integer dlqPartitionCount; // number of partitions of the dlq topic
 
     private Integer dlqPartitionNumber; // dlq partition number

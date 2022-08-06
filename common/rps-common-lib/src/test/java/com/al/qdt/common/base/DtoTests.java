@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Tag;
 import static com.al.qdt.common.enums.Hand.ROCK;
 import static com.al.qdt.common.enums.Hand.SCISSORS;
 import static com.al.qdt.common.enums.Player.USER;
-import static com.al.qdt.common.helpers.Constants.SUCCESS_MESSAGE;
-import static com.al.qdt.common.helpers.Constants.USERNAME_ONE;
+import static com.al.qdt.common.helpers.Constants.*;
 
 @Tag(value = "dto")
 public interface DtoTests {
@@ -48,6 +47,7 @@ public interface DtoTests {
      */
     default GameDto createGameJsonDto() {
         return GameDto.builder()
+                .id(TEST_ID)
                 .username(USERNAME_ONE)
                 .hand(ROCK.name())
                 .build();
@@ -60,6 +60,7 @@ public interface DtoTests {
      */
     default ScoreDto createScoreJsonDto() {
         return ScoreDto.builder()
+                .id(TEST_ID)
                 .winner(USER.name())
                 .build();
     }

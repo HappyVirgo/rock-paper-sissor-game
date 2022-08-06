@@ -15,6 +15,9 @@ public class GameDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotBlank
+    String id;
+
+    @NotBlank
     String username;
 
     @NotBlank

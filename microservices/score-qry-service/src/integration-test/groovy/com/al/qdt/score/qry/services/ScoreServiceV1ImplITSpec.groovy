@@ -9,6 +9,8 @@ import spock.lang.Title
 
 import static com.al.qdt.common.enums.Player.USER
 import static com.al.qdt.common.helpers.Constants.TEST_UUID
+import static com.al.qdt.score.qry.config.CacheConfig.SCORES_CACHE_NAME
+import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAME
 
 @Title("Integration testing of the ScoreServiceV1Impl class")
 class ScoreServiceV1ImplITSpec extends AbstractIntegration implements EntityTests {
@@ -30,19 +32,16 @@ class ScoreServiceV1ImplITSpec extends AbstractIntegration implements EntityTest
         noExceptionThrown()
 
         and: 'Data exists in the cache'
-        def actualScore = getCachedScoreDtoById(TEST_UUID, ScoreDto.class).get() as ScoreDto
+        def actualScore = getCachedScoreDtoById(TEST_UUID, ScoreDto.class, SCORE_CACHE_NAME).get() as ScoreDto
+        assert expectedScore.id.toString() == actualScore.id
         assert expectedScore.winner.name() == actualScore.winner
-
-        and:
-        "Im-memory cache size is equals to $EXPECTED_COLLECTION_SIZE"
-        assert cacheManager.cacheNames.size() == EXPECTED_COLLECTION_SIZE
 
         and:
         "Im-memory cache contains $SCORE_CACHE_NAME cache"
         assert cacheManager.cacheNames.contains(SCORE_CACHE_NAME)
     }
 
-    def 'Testing caching functionality of the all() method, scores should not be cached'() {
+    def 'Testing caching functionality of the all() method, scores should be cached'() {
         when: 'Calling the api'
         def actualScores = scoreService.all()
 
@@ -52,8 +51,8 @@ class ScoreServiceV1ImplITSpec extends AbstractIntegration implements EntityTest
         and: 'List of data returns from server'
         assert actualScores.size() == EXPECTED_COLLECTION_SIZE
 
-        and: 'Im-memory cache size is empty'
-        assert isEmpty(cacheManager.getCache(SCORE_CACHE_NAME))
+        and: 'Im-memory cache size is not empty'
+        assert !isEmpty(cacheManager.getCache(SCORES_CACHE_NAME))
     }
 
     def 'Testing caching functionality of the findByWinner() method, scores should not be cached'() {

@@ -74,37 +74,45 @@ class ScoreControllerV2Spec extends Specification implements ProtoTests, MvcHelp
                 .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Response validation'
         result?.andExpect jsonPath('$.scores').exists()
+        result?.andExpect jsonPath('$.scores[0].id').exists()
+        result?.andExpect jsonPath('$.scores[0].id').value(firstScoreDto.id)
+        result?.andExpect jsonPath('$.scores[1].id').exists()
+        result?.andExpect jsonPath('$.scores[1].id').value(secondScoreDto.id)
+        result?.andExpect jsonPath('$.scores[0].winner').exists()
         result?.andExpect jsonPath('$.scores[0].winner').value(firstScoreDto.winner)
+        result?.andExpect jsonPath('$.scores[1].winner').exists()
         result?.andExpect jsonPath('$.scores[1].winner').value(secondScoreDto.winner)
     }
 
     def 'Testing of the findById() method'() {
         given: 'Setup test data'
-        def scoreDto = createScoreDto()
+        def expectedScoreDto = createScoreDto()
 
         and: 'Mock returns a scores if invoked with id argument'
-        scoreService.findById(TEST_UUID) >> scoreDto
+        scoreService.findById(TEST_UUID) >> expectedScoreDto
 
         when: 'Calling the api'
         def result = mockMvc.perform(get("/v2/scores/{id}", TEST_UUID)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON_VALUE)
                 .characterEncoding(UTF_8))
-                .andDo(print())
+                .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.id').exists()
+        result?.andExpect jsonPath('$.id').value(expectedScoreDto.id)
         result?.andExpect jsonPath('$.winner').exists()
-        result?.andExpect jsonPath('$.winner').value(scoreDto.winner)
+        result?.andExpect jsonPath('$.winner').value(expectedScoreDto.winner)
     }
 
-    void 'Testing of the findByWinner() method'() {
+    def 'Testing of the findByWinner() method'() {
         given: 'Setup test data'
         def scoreDto = createScoreDto()
         def listOfScoresResponse = ListOfScoresResponse.newBuilder()
@@ -119,13 +127,16 @@ class ScoreControllerV2Spec extends Specification implements ProtoTests, MvcHelp
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON_VALUE)
                 .characterEncoding(UTF_8))
-                .andDo(print())
+                .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Response validation'
         result?.andExpect jsonPath('$.scores').exists()
+        result?.andExpect jsonPath('$.scores[0].id').exists()
+        result?.andExpect jsonPath('$.scores[0].id').value(scoreDto.id)
+        result?.andExpect jsonPath('$.scores[0].winner').exists()
         result?.andExpect jsonPath('$.scores[0].winner').value(scoreDto.winner)
     }
 }
