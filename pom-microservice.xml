@@ -543,6 +543,9 @@
                         <configuration>
                             <skip>${integration-tests.skip}</skip>
                             <fork>false</fork>
+                            <profiles>
+                                <profile>it</profile>
+                            </profiles>
                             <arguments>
                                 <argument>--server.port=${tomcat.http.port}</argument>
                             </arguments>

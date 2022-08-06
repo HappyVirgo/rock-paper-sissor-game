@@ -64,8 +64,6 @@ spring:
       ack-mode: MANUAL_IMMEDIATE
     consumer:
       client-id: '@project.artifactId@'
-      # consumer group id
-      group-id: score-consumer-group
       auto-offset-reset: earliest
       enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -138,6 +136,7 @@ app:
   # Kafka configuration
   kafka:
     dlq-topic-name: DLT.SCORE.QRY
+    consumer-group-id: score-consumer-group
     dlq-partition-count: 1
     dlq-partition-number: 0
     retries-number: 2

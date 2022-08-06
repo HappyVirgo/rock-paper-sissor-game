@@ -3,7 +3,6 @@ package com.al.qdt.score.qry.handlers;
 import com.al.qdt.common.events.rps.GameDeletedEvent;
 import com.al.qdt.common.events.score.ScoresAddedEvent;
 import com.al.qdt.common.events.score.ScoresDeletedEvent;
-import com.al.qdt.score.qry.exceptions.ScoreNotFoundException;
 import com.al.qdt.score.qry.repositories.ScoreRepository;
 import com.al.qdt.score.qry.services.mappers.ScoreMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import static com.al.qdt.score.qry.config.CacheConfig.SCORE_CACHE_NAMES;
 import static com.al.qdt.score.qry.config.CacheConfig.SCORE_PROTO_CACHE_NAME;
 import static com.al.qdt.score.qry.config.CacheConfig.WINNERS_CACHE_NAME;
 import static com.al.qdt.score.qry.config.CacheConfig.WINNERS_PROTO_CACHE_NAME;
-import static com.al.qdt.score.qry.exceptions.ScoreNotFoundException.SCORE_BY_ID_NOT_FOUND_EXCEPTION_MESSAGE;
 
 @Slf4j
 @Service
@@ -42,8 +40,11 @@ public class ScoreEventHandler implements EventHandler {
             @CacheEvict(cacheNames = WINNERS_CACHE_NAME, allEntries = true),
             @CacheEvict(cacheNames = WINNERS_PROTO_CACHE_NAME, allEntries = true)})
     public void on(@Valid ScoresAddedEvent event) {
-        log.info("Handling score added event with id: {}", event.getId().toString());
-        this.scoreRepository.save(this.scoreMapper.toEntity(event));
+        final var scoreId = event.getId();
+        log.info("Handling score added event with id: {}", scoreId);
+        if (!this.scoreRepository.existsById(scoreId)) {
+            this.scoreRepository.save(this.scoreMapper.toEntity(event));
+        }
     }
 
     @Override
@@ -56,8 +57,8 @@ public class ScoreEventHandler implements EventHandler {
             @CacheEvict(cacheNames = WINNERS_PROTO_CACHE_NAME, allEntries = true)})
     public void on(@Valid ScoresDeletedEvent event) {
         final var scoreId = event.getId();
-        log.info("Handling score deleted event with id: {}", scoreId.toString());
-        this.deleteById(scoreId);
+        log.info("Handling score deleted event with id: {}", scoreId);
+        this.scoreRepository.deleteById(scoreId);
     }
 
     @Override
@@ -70,20 +71,7 @@ public class ScoreEventHandler implements EventHandler {
             @CacheEvict(cacheNames = WINNERS_PROTO_CACHE_NAME, allEntries = true)})
     public void on(@Valid GameDeletedEvent event) {
         final var scoreId = event.getId();
-        log.info("Handling game deleted event with id: {}", scoreId.toString());
-        this.deleteById(scoreId);
-    }
-
-    /**
-     * Delete score by id.
-     *
-     * @param scoreId score id
-     */
-    private void deleteById(UUID scoreId) {
-        if (this.scoreRepository.existsById(scoreId)) {
-            this.scoreRepository.deleteById(scoreId);
-            return;
-        }
-        throw new ScoreNotFoundException(String.format(SCORE_BY_ID_NOT_FOUND_EXCEPTION_MESSAGE, scoreId.toString()));
+        log.info("Handling game deleted event with id: {}", scoreId);
+        this.scoreRepository.deleteById(scoreId);
     }
 }

@@ -14,6 +14,7 @@ public class Constants {
     public static final String USERNAME_ONE = "User1"; // first test username
     public static final String USERNAME_TWO = "User2"; // second test username
     public static final String TEST_ID = "748873ec-f887-4090-93ff-f8b8cbb34c7a";
+    public static final String TEST_TWO_ID = "888873ec-f887-4090-93ff-f8b8cbb34c7a";
     public static final String TEST_WINNER = "USER";
     public static final String SUCCESS_MESSAGE = "Database restore request completed successfully!";
     public static final UUID TEST_UUID = UUID.fromString(TEST_ID);
@@ -33,10 +34,10 @@ public class Constants {
     // dto serialization/deserialization testing properties
     public static final String BASE_RESPONSE_EXPECTED_JSON = "{\"message\":\"Database restore request completed successfully!\"}";
     public static final String GAME_RESPONSE_EXPECTED_JSON = "{\"user_choice\":\"ROCK\",\"machine_choice\":\"SCISSORS\",\"result\":\"USER\"}";
-    public static final String GAME_EXPECTED_JSON = "{\"username\":\"User1\",\"hand\":\"ROCK\"}";
-    public static final String GAMES_EXPECTED_JSON = "[{\"username\":\"User1\",\"hand\":\"ROCK\"}]";
-    public static final String SCORE_EXPECTED_JSON = "{\"winner\":\"USER\"}";
-    public static final String SCORES_EXPECTED_JSON = "[{\"winner\":\"USER\"}]";
+    public static final String GAME_EXPECTED_JSON = "{\"id\":\"748873ec-f887-4090-93ff-f8b8cbb34c7a\",\"username\":\"User1\",\"hand\":\"ROCK\"}";
+    public static final String GAMES_EXPECTED_JSON = "[{\"id\":\"748873ec-f887-4090-93ff-f8b8cbb34c7a\",\"username\":\"User1\",\"hand\":\"ROCK\"}]";
+    public static final String SCORE_EXPECTED_JSON = "{\"id\":\"748873ec-f887-4090-93ff-f8b8cbb34c7a\",\"winner\":\"USER\"}";
+    public static final String SCORES_EXPECTED_JSON = "[{\"id\":\"748873ec-f887-4090-93ff-f8b8cbb34c7a\",\"winner\":\"USER\"}]";
 
     // open api
     public static final String HANDLER_ERROR_JSON = "{\n" +

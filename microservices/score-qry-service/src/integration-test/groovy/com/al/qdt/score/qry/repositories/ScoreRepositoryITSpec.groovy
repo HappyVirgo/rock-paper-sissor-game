@@ -88,6 +88,8 @@ class ScoreRepositoryITSpec extends Specification implements EntityTests {
         assert actualScores instanceof List<Score>
         assert !actualScores.isEmpty()
         assert actualScores.size() == 1
+        assert actualScores[0].id == TEST_UUID
+        assert actualScores[0].id == expectedScore.id
         assert actualScores[0].winner == USER
         assert actualScores[0].winner == expectedScore.winner
     }

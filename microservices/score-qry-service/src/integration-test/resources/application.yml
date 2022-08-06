@@ -9,13 +9,6 @@ grpc:
       negotiation-type: plaintext
       address: static://localhost:${grpc.server.port}
 
-spring:
-  # Kafka properties
-  kafka:
-    consumer:
-      # score group id
-      group-id: score-consumer
-
 # OpenApi configuration
 api:
   dev:
@@ -45,6 +38,7 @@ app:
   # Kafka configuration
   kafka:
     dlq-topic-name: DLT.SCORE.QRY
+    consumer-group-id: score-consumer-group-0
     dlq-partition-count: 1
     dlq-partition-number: 0
     retries-number: 2

@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import static com.al.qdt.common.enums.Hand.ROCK;
-import static com.al.qdt.common.helpers.Constants.TEST_UUID;
-import static com.al.qdt.common.helpers.Constants.USERNAME_ONE;
+import static com.al.qdt.common.helpers.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -24,6 +23,8 @@ class GameProtoMapperTest implements EntityTests {
         final var gameDto = this.gameProtoMapper.toDto(game);
 
         assertNotNull(gameDto);
+        assertEquals(TEST_ID, gameDto.getId());
+        assertEquals(game.getId().toString(), gameDto.getId());
         assertEquals(USERNAME_ONE, gameDto.getUsername());
         assertEquals(game.getUsername(), gameDto.getUsername());
         assertEquals(ROCK.name(), gameDto.getHand().name());

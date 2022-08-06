@@ -12,6 +12,8 @@ import spock.lang.Title
 
 import static com.al.qdt.common.enums.Player.MACHINE
 import static com.al.qdt.common.enums.Player.USER
+import static com.al.qdt.common.helpers.Constants.TEST_ID
+import static com.al.qdt.common.helpers.Constants.TEST_TWO_ID
 import static com.al.qdt.common.helpers.Constants.TEST_UUID
 import static java.nio.charset.StandardCharsets.UTF_8
 import static org.springframework.http.MediaType.APPLICATION_JSON
@@ -24,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ScoreControllerV1Spec extends Specification implements MvcHelper {
 
     @Subject
-    def scoreService = Mock(ScoreServiceV1)
+    def scoreService = Mock ScoreServiceV1
     MockMvc mockMvc
 
     // Run before every feature method
@@ -42,9 +44,11 @@ class ScoreControllerV1Spec extends Specification implements MvcHelper {
     def 'Testing of the all() method'() {
         given: 'Setup test data'
         def firstScoreDto = ScoreDto.builder()
+                .id(TEST_ID)
                 .winner(USER.name())
                 .build()
         def secondScoreDto = ScoreDto.builder()
+                .id(TEST_TWO_ID)
                 .winner(MACHINE.name())
                 .build()
 
@@ -59,9 +63,13 @@ class ScoreControllerV1Spec extends Specification implements MvcHelper {
                 .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.[0].id').exists()
+        result?.andExpect jsonPath('$.[0].id').value(firstScoreDto.id.toString())
+        result?.andExpect jsonPath('$.[1].id').exists()
+        result?.andExpect jsonPath('$.[1].id').value(secondScoreDto.id.toString())
         result?.andExpect jsonPath('$.[0].winner').exists()
         result?.andExpect jsonPath('$.[0].winner').value(firstScoreDto.winner)
         result?.andExpect jsonPath('$.[1].winner').exists()
@@ -70,49 +78,55 @@ class ScoreControllerV1Spec extends Specification implements MvcHelper {
 
     def 'Testing of the findById() method'() {
         given: 'Setup test data'
-        def scoreDto = ScoreDto.builder()
+        def expectedScore = ScoreDto.builder()
+                .id(TEST_ID)
                 .winner(USER.name())
                 .build()
 
         and: 'Mock returns score if invoked with id argument'
-        scoreService.findById(TEST_UUID) >> scoreDto
+        scoreService.findById(TEST_UUID) >> expectedScore
 
         when: 'Calling the api'
         def result = mockMvc.perform(get("/v1/scores/{id}", TEST_UUID)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON_VALUE)
                 .characterEncoding(UTF_8))
-                .andDo(print())
+                .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.id').exists()
+        result?.andExpect jsonPath('$.id').value(expectedScore.id.toString())
         result?.andExpect jsonPath('$.winner').exists()
-        result?.andExpect jsonPath('$.winner').value(scoreDto.winner)
+        result?.andExpect jsonPath('$.winner').value(expectedScore.winner)
     }
 
     def 'Testing of the findByWinner() method'() {
         given: 'Setup test data'
-        def scoreDto = ScoreDto.builder()
+        def expectedScore = ScoreDto.builder()
+                .id(TEST_ID)
                 .winner(USER.name())
                 .build()
 
         and: 'Mock returns list of scores if invoked with player type argument'
-        scoreService.findByWinner(USER) >> [scoreDto]
+        scoreService.findByWinner(USER) >> [expectedScore]
 
         when: 'Calling the api'
         def result = mockMvc.perform(get("/v1/scores/users/{winner}", USER)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON_VALUE)
                 .characterEncoding(UTF_8))
-                .andDo(print())
+                .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.[0].id').exists()
+        result?.andExpect jsonPath('$.[0].id').value(expectedScore.id.toString())
         result?.andExpect jsonPath('$.[0].winner').exists()
-        result?.andExpect jsonPath('$.[0].winner').value(scoreDto.winner)
+        result?.andExpect jsonPath('$.[0].winner').value(expectedScore.winner)
     }
 }

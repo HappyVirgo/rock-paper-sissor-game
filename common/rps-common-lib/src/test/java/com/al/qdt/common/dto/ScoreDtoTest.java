@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import static com.al.qdt.common.enums.Player.USER;
-import static com.al.qdt.common.helpers.Constants.SCORE_EXPECTED_JSON;
+import static com.al.qdt.common.helpers.Constants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -38,6 +38,7 @@ class ScoreDtoTest implements DtoTests {
     @DisplayName("Testing ScoreDto properties")
     void scoreDtoPropertiesTest() {
         assertAll("Testing ScoreDto",
+                () -> assertEquals(TEST_ID, this.expectedScoreDto.getId(), "Id didn't match!"),
                 () -> assertEquals(USER.name(), this.expectedScoreDto.getWinner(), "Winner didn't match!")
         );
     }
@@ -49,6 +50,7 @@ class ScoreDtoTest implements DtoTests {
         final var actualJson = objectMapper.writeValueAsString(this.expectedScoreDto);
 
         assertNotNull(actualJson);
+        assertThat(actualJson, containsString("id"));
         assertThat(actualJson, containsString("winner"));
         assertThat(actualJson, not(containsString("score")));
 
@@ -62,6 +64,8 @@ class ScoreDtoTest implements DtoTests {
         final var actualScoreDto = objectMapper.readValue(SCORE_EXPECTED_JSON, ScoreDto.class);
 
         assertNotNull(actualScoreDto);
+        assertEquals(TEST_ID, actualScoreDto.getId());
+        assertEquals(this.expectedScoreDto.getId(), actualScoreDto.getId());
         assertEquals(USER.name(), actualScoreDto.getWinner());
         assertEquals(this.expectedScoreDto.getWinner(), actualScoreDto.getWinner());
     }

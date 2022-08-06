@@ -29,9 +29,11 @@ class ScoreControllerV1ITSpec extends AbstractIntegration implements MvcHelper {
         testStatusAndContentType(result)
 
         and: 'Etag availability'
-        result?.andExpect header().exists("Etag")
+        result?.andExpect header().exists('Etag')
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.[0].id').exists()
+        result?.andExpect jsonPath('$.[0].id').value(expectedScore.id.toString())
         result?.andExpect jsonPath('$.[0].winner').exists()
         result?.andExpect jsonPath('$.[0].winner').value(expectedScore.winner.name())
     }
@@ -45,12 +47,14 @@ class ScoreControllerV1ITSpec extends AbstractIntegration implements MvcHelper {
                 .andDo(print())
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Etag availability'
-        result?.andExpect header().exists("Etag")
+        result?.andExpect header().exists('Etag')
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.id').exists()
+        result?.andExpect jsonPath('$.id').value(expectedScore.id.toString())
         result?.andExpect jsonPath('$.winner').exists()
         result?.andExpect jsonPath('$.winner').value(expectedScore.winner.name())
     }
@@ -64,12 +68,14 @@ class ScoreControllerV1ITSpec extends AbstractIntegration implements MvcHelper {
                 .andDo(print())
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Etag availability'
-        result?.andExpect header().exists("Etag")
+        result?.andExpect header().exists('Etag')
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.[0].id').exists()
+        result?.andExpect jsonPath('$.[0].id').value(expectedScore.id.toString())
         result?.andExpect jsonPath('$.[0].winner').exists()
         result?.andExpect jsonPath('$.[0].winner').value(expectedScore.winner.name())
     }

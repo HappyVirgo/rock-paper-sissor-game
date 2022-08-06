@@ -29,6 +29,7 @@ class ScoreDtoMapperITSpec extends AbstractIntegration {
 
         then: 'Mapped successfully'
         assert scoreDto
+        assert scoreDto.id == TEST_UUID.toString() && scoreDto.id == score.id.toString()
         assert scoreDto.winner == USER.name() && scoreDto.winner == score.winner.name()
     }
 }

@@ -24,6 +24,8 @@ class ScoreProtoMapperSpec extends Specification implements EntityTests {
 
         then: 'Mapped successfully'
         assert scoreDto
+        assert scoreDto.id == TEST_UUID.toString()
+        assert scoreDto.id == score.id.toString()
         assert scoreDto.winner == USER.name()
         assert scoreDto.winner == score.winner.name()
     }

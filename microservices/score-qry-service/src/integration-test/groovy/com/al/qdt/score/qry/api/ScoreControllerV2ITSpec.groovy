@@ -28,13 +28,16 @@ class ScoreControllerV2ITSpec extends AbstractIntegration implements EntityTests
                 .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Etag availability'
-        result?.andExpect header().exists("Etag")
+        result?.andExpect header().exists('Etag')
 
         and: 'Response validation'
         result?.andExpect jsonPath('$.scores').exists()
+        result?.andExpect jsonPath('$.scores[0].id').exists()
+        result?.andExpect jsonPath('$.scores[0].id').value(expectedScore.id.toString())
+        result?.andExpect jsonPath('$.scores[0].winner').exists()
         result?.andExpect jsonPath('$.scores[0].winner').value(expectedScore.winner.name())
     }
 
@@ -44,36 +47,40 @@ class ScoreControllerV2ITSpec extends AbstractIntegration implements EntityTests
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON_VALUE)
                 .characterEncoding(UTF_8))
-                .andDo(print())
+                .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Etag availability'
-        result?.andExpect header().exists("Etag")
+        result?.andExpect header().exists('Etag')
 
         and: 'Response validation'
+        result?.andExpect jsonPath('$.id').exists()
+        result?.andExpect jsonPath('$.id').value(expectedScore.id.toString())
         result?.andExpect jsonPath('$.winner').exists()
         result?.andExpect jsonPath('$.winner').value(expectedScore.winner.name())
     }
 
-    @DisplayName("Testing of the findByWinner() method")
-    void 'Testing of the findByWinner() method'() {
+    def 'Testing of the findByWinner() method'() {
         when: 'Calling the api'
         def result = mockMvc.perform(get("/v2/scores/users/{winner}", USER)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON_VALUE)
                 .characterEncoding(UTF_8))
-                .andDo(print())
+                .andDo print()
 
         then: 'Status and content type validation'
-        testStatusAndContentType(result)
+        testStatusAndContentType result
 
         and: 'Etag availability'
-        result?.andExpect header().exists("Etag")
+        result?.andExpect header().exists('Etag')
 
         and: 'Response validation'
         result?.andExpect jsonPath('$.scores').exists()
+        result?.andExpect jsonPath('$.scores[0].id').exists()
+        result?.andExpect jsonPath('$.scores[0].id').value(expectedScore.id.toString())
+        result?.andExpect jsonPath('$.scores[0].winner').exists()
         result?.andExpect jsonPath('$.scores[0].winner').value(expectedScore.winner.name())
     }
 }

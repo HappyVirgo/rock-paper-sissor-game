@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import static com.al.qdt.common.enums.Hand.ROCK;
-import static com.al.qdt.common.helpers.Constants.GAME_EXPECTED_JSON;
-import static com.al.qdt.common.helpers.Constants.USERNAME_ONE;
+import static com.al.qdt.common.helpers.Constants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -36,6 +35,7 @@ class GameDtoTest implements DtoTests {
     @DisplayName("Testing GameDto properties")
     void gameDtoPropertiesTest() {
         assertAll("Testing GameDto",
+                () -> assertEquals(TEST_ID, this.expectedGameDto.getId(), "Id didn't match!"),
                 () -> assertEquals(USERNAME_ONE, this.expectedGameDto.getUsername(), "Username didn't match!"),
                 () -> assertEquals(ROCK.name(), this.expectedGameDto.getHand(), "Hand didn't match!")
         );
@@ -48,6 +48,7 @@ class GameDtoTest implements DtoTests {
         final var actualJson = objectMapper.writeValueAsString(this.expectedGameDto);
 
         assertNotNull(actualJson);
+        assertThat(actualJson, containsString("id"));
         assertThat(actualJson, containsString("username"));
         assertThat(actualJson, containsString("hand"));
         assertThat(actualJson, not(containsString("game")));
@@ -62,6 +63,8 @@ class GameDtoTest implements DtoTests {
         final var actualGameDto = objectMapper.readValue(GAME_EXPECTED_JSON, GameDto.class);
 
         assertNotNull(actualGameDto);
+        assertEquals(TEST_ID, actualGameDto.getId());
+        assertEquals(this.expectedGameDto.getId(), actualGameDto.getId());
         assertEquals(USERNAME_ONE, actualGameDto.getUsername());
         assertEquals(this.expectedGameDto.getUsername(), actualGameDto.getUsername());
         assertEquals(ROCK.name(), actualGameDto.getHand());

@@ -35,7 +35,6 @@ import static java.util.Optional.ofNullable
 @Stepwise
 @ActiveProfiles("it")
 class AbstractIntegration extends Specification implements EntityTests {
-    static final SCORE_CACHE_NAME = "scores" // cache name
     static final EXPECTED_COLLECTION_SIZE = 1 // expected collection size
 
     @Autowired
@@ -78,10 +77,11 @@ class AbstractIntegration extends Specification implements EntityTests {
      *
      * @param uuid of the cached score data transfer object
      * @param clazz object type
+     * @param cacheName cache name
      * @return a cached score data transfer object
      */
-    def getCachedScoreDtoById(UUID uuid, Class clazz) {
-        ofNullable(cacheManager.getCache(SCORE_CACHE_NAME))
+    def getCachedScoreDtoById(UUID uuid, Class clazz, String cacheName) {
+        ofNullable(cacheManager.getCache(cacheName))
                 .map(cache -> cache.get(uuid.toString(), clazz))
     }
 
