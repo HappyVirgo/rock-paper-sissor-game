@@ -11,8 +11,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
 import static com.al.qdt.common.enums.Hand.ROCK;
-import static com.al.qdt.common.helpers.Constants.TEST_UUID;
-import static com.al.qdt.common.helpers.Constants.USERNAME_ONE;
+import static com.al.qdt.common.enums.Hand.SCISSORS;
+import static com.al.qdt.common.helpers.Constants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -106,6 +106,32 @@ class GameRepositoryIT implements EntityTests {
         final var isExists = this.gameRepository.existsById(TEST_UUID);
 
         assertTrue(isExists);
+    }
+
+    @Test
+    @DisplayName("Testing save() method")
+    void saveTest() {
+        final var newGame = createGame(TEST_UUID_TWO, USERNAME_TWO, SCISSORS);
+        assertDoesNotThrow(() -> this.gameRepository.save(newGame));
+
+        final var count = this.gameRepository.count();
+
+        assertEquals(2, count);
+
+        final var savedGameOptional = this.gameRepository.findById(newGame.getId());
+
+        assertNotNull(savedGameOptional);
+        assertTrue(savedGameOptional.isPresent());
+
+        final var savedGame = savedGameOptional.get();
+
+        assertNotNull(savedGame);
+        assertEquals(TEST_UUID_TWO, savedGame.getId());
+        assertEquals(newGame.getId(), savedGame.getId());
+        assertEquals(USERNAME_TWO, savedGame.getUsername());
+        assertEquals(newGame.getUsername(), savedGame.getUsername());
+        assertEquals(SCISSORS, savedGame.getHand());
+        assertEquals(newGame.getHand(), savedGame.getHand());
     }
 
     @Test
