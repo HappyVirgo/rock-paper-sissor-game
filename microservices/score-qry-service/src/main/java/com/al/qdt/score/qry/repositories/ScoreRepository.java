@@ -12,8 +12,8 @@ import java.util.UUID;
 public interface ScoreRepository extends JpaRepository<Score, UUID> {
     List<Score> findByWinner(Player winner);
 
-    @Modifying
-    @Query(value = "DELETE FROM score s WHERE s.id = ?1",
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = "DELETE FROM score s WHERE s.id = :id",
             nativeQuery = true)
     void deleteById(UUID id);
 }
