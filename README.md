@@ -29,6 +29,8 @@ The Rock Paper Scissors game project provides infrastructure, REST and gRPC APIs
 * [Flyway](https://flywaydb.org) - database version control 
 * [Prometheus](https://prometheus.io) - metrics database
 * [Grafana](https://grafana.com) - metrics visualization
+* [ELK Stack](https://www.elastic.co) - log aggregation and monitoring in a centralized way
+* [Redis](https://redis.io) - cache management
 
 ** H2 in-memory database engine is used for dev and it profiles only
 ### 1. Installation of Docker Desktop
