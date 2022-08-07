@@ -111,5 +111,5 @@ app:
     thread-name-prefix: async-thread
   # Kafka configuration
   kafka:
-    max-in-flight-request-per-connection: 1
+    max-in-flight-request-per-connection: 5
     is-idempotence-enabled: true
