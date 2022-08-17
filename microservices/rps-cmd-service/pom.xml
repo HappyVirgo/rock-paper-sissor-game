@@ -4,32 +4,450 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.al.qdt</groupId>
-        <artifactId>rps-microservice</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../pom-microservice.xml</relativePath> <!-- lookup parent from repository -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.1</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <artifactId>rps-cmd-service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <name>RPS Game Command Microservice</name>
-    <description>The Rock Paper Scissors game command microservice provides REST and gRPC APIs for the Rock Paper Scissors game.</description>
+    <description>The Rock Paper Scissors game command microservice provides REST and gRPC APIs for the Rock Paper
+        Scissors game.
+    </description>
+
+    <licenses>
+        <license>
+            <name>The GNU General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/${github.repo.username}/${github.repo.name}</url>
+        <connection>scm:git:git://github.com/${github.repo.username}/${github.repo.name}.git</connection>
+        <developerConnection>scm:git:git@github.com:${github.repo.username}/${github.repo.name}.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
+        <!-- General properties -->
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Dependencies -->
+        <cqrs-es-framework.version>1.0.0-SNAPSHOT</cqrs-es-framework.version>
+        <rps-common-lib.version>1.0.0-SNAPSHOT</rps-common-lib.version>
+        <grpc-spring-boot-starter.version>2.13.0.RELEASE</grpc-spring-boot-starter.version>
+        <spring-security-oauth2.version>2.4.0.RELEASE</spring-security-oauth2.version>
+        <spring-security-oauth2-autoconfigure.version>2.6.2</spring-security-oauth2-autoconfigure.version>
+        <spring-security-jwt.version>1.1.0.RELEASE</spring-security-jwt.version>
+        <kafka.version>2.8.1</kafka.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <mockito.version>3.9.0</mockito.version>
+        <embed.mongo.version>3.2.6</embed.mongo.version>
+        <grpc.version>1.42.1</grpc.version>
+        <spock.version>2.1-M2-groovy-3.0</spock.version>
+        <flyway-mysql.version>8.4.3</flyway-mysql.version>
+        <mock-server.version>3.10.8</mock-server.version>
+        <wiremock.version>2.1.12</wiremock.version>
+        <logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
+        <!-- Plugins -->
+        <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+        <jib-maven-plugin.version>3.1.4</jib-maven-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <site-maven-plugin.version>0.12</site-maven-plugin.version>
+        <maven-release-plugin.version>3.0.0-M1</maven-release-plugin.version>
+        <gmavenplus-plugin.version>1.12.1</gmavenplus-plugin.version>
+        <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
+        <springdoc-openapi-maven-plugin.version>1.3</springdoc-openapi-maven-plugin.version>
         <!-- Main class of the application-->
         <main-class>com.al.qdt.rps.cmd.RpsCmdServiceApp</main-class>
         <!-- Docker Hub properties -->
+        <docker-hub-user-id>hokushin</docker-hub-user-id>
+        <base.image.digest>@sha256:6c17f58746695a08b07b9bffd69bb6c46ff9380fdb974529135ad0d0167fd715</base.image.digest>
+        <base.image.path>openjdk:11-jdk-slim</base.image.path>
         <image.path>${docker-hub-user-id}/${uberjar.name}</image.path>
         <!-- Sonar properties -->
+        <sonar.organization>${github.repo.username}</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${project.build.directory}/site/jacoco/jacoco-merged-test-coverage-report/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>
             **/RpsCmdServiceApp.java
         </sonar.coverage.exclusions>
+        <!-- CircleCI properties -->
+        <build.number>000</build.number>
+        <commit.hash>local-build</commit.hash>
+        <build.user>local-build</build.user>
+        <build.repo>local-build</build.repo>
+        <circle.workflow>local-build</circle.workflow>
+        <!-- GitHub properties -->
+        <!-- Github server corresponds to entry in ~/.m2/settings.xml -->
+        <github.global.server>github</github.global.server>
+        <!-- GitHub repo name -->
+        <github.repo.name>rps-microservices</github.repo.name>
+        <!-- GitHub account username -->
+        <github.repo.username>hokushin118</github.repo.username>
+        <!-- Branch for storing deployed artifacts, does not need to exist, will be created by plugin -->
+        <github-staging-repo>nexus-repo</github-staging-repo>
         <!-- Name of the project -->
         <uberjar.name>${project.artifactId}</uberjar.name>
     </properties>
 
+    <profiles>
+        <!-- Profile for running application on development environment -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+                <junit-tests.skip>false</junit-tests.skip>
+                <integration-tests.skip>false</integration-tests.skip>
+                <jib.skip>true</jib.skip>
+                <site-maven-plugin.skip>false</site-maven-plugin.skip>
+            </properties>
+
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                        <!-- For artifact deployment in the nexus-repo branch of the GitHub repository -->
+                        <configuration>
+                            <!-- Deploying artifact to the target/nexus-repo folder -->
+                            <altDeploymentRepository>
+                                internal.repo::default::file://${project.build.directory}/${github-staging-repo}
+                            </altDeploymentRepository>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Profile for running application on production environment -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+                <junit-tests.skip>false</junit-tests.skip>
+                <integration-tests.skip>true</integration-tests.skip>
+                <jib.skip>true</jib.skip>
+                <site-maven-plugin.skip>false</site-maven-plugin.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                        <!-- For artifact deployment in the nexus-repo branch of the GitHub repository -->
+                        <configuration>
+                            <!-- Deploying artifact to the target/nexus-repo folder -->
+                            <altDeploymentRepository>
+                                internal.repo::default::file://${project.build.directory}/${github-staging-repo}
+                            </altDeploymentRepository>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Profile for deploying artifacts to the Docker Hub repository -->
+        <profile>
+            <id>docker</id>
+            <properties>
+                <spring.profiles.active>docker</spring.profiles.active>
+                <junit-tests.skip>true</junit-tests.skip>
+                <integration-tests.skip>true</integration-tests.skip>
+                <jib.skip>false</jib.skip>
+                <site-maven-plugin.skip>true</site-maven-plugin.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Profile for running integration tests -->
+        <profile>
+            <id>it</id>
+            <properties>
+                <spring.profiles.active>it</spring.profiles.active>
+                <junit-tests.skip>true</junit-tests.skip>
+                <integration-tests.skip>false</integration-tests.skip>
+                <jib.skip>true</jib.skip>
+                <site-maven-plugin.skip>false</site-maven-plugin.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Profile for deploying artifacts to the GitHub Packages repository -->
+        <profile>
+            <id>github</id>
+            <properties>
+                <spring.profiles.active>github</spring.profiles.active>
+                <junit-tests.skip>true</junit-tests.skip>
+                <integration-tests.skip>true</integration-tests.skip>
+                <jib.skip>true</jib.skip>
+                <site-maven-plugin.skip>true</site-maven-plugin.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Plugin for deploying artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+            <!--
+            For artifact deployment in the GitHub Packages repository
+            https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages
+            -->
+            <distributionManagement>
+                <!-- Repository for holding project releases (GitHub internal) -->
+                <repository>
+                    <id>github</id>
+                    <name>GitHub Packages</name>
+                    <url>https://maven.pkg.github.com/${github.repo.username}/${github.repo.name}</url>
+                </repository>
+                <!-- Repository for holding project snapshots -->
+                <snapshotRepository>
+                    <id>packagecloud.snapshots</id>
+                    <name>Packagecloud Packages</name>
+                    <url>packagecloud+https://packagecloud.io/hokushin/snapshot</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-bom</artifactId>
+                <version>${grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Validation API -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- AOP dependency for Micrometer timer -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- Micrometer -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- gRPC Server -->
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+            <version>${grpc-spring-boot-starter.version}</version>
+        </dependency>
+
+        <!-- gRPC Client -->
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-client-spring-boot-starter</artifactId>
+            <version>${grpc-spring-boot-starter.version}</version>
+        </dependency>
+
+        <!-- gRPC server reflection -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-services</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Logstash Encoder for ELK -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+
+        <!-- RPS game dependencies-->
+        <dependency>
+            <groupId>com.al.qdt</groupId>
+            <artifactId>cqrs-es-framework</artifactId>
+            <version>${cqrs-es-framework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.al.qdt</groupId>
+            <artifactId>rps-common-lib</artifactId>
+            <version>${rps-common-lib.version}</version>
+        </dependency>
+
+        <!-- H2 Database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- MapStruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Testing with Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+            <!-- needed if downgrading to Apache Kafka 2.8.1 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <classifier>test</classifier>
+            <version>${kafka.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.13</artifactId>
+            <classifier>test</classifier>
+            <version>${kafka.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- gRPC Testing -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-testing</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--Testing with MockServer -->
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>${mock-server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-client-java</artifactId>
+            <version>${mock-server.version}</version>
+        </dependency>
+
+        <!--Testing with Wiremock -->
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${wiremock.version}</version>
+        </dependency>
+
+        <!-- Testing with Groovy Spock -->
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>${spock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-spring</artifactId>
+            <version>${spock.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -48,10 +466,12 @@
         <finalName>${uberjar.name}</finalName>
 
         <plugins>
+
             <!-- Plugin for adding custom integration test folder -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>add-integration-test-source</id>
@@ -65,8 +485,467 @@
                             </sources>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>reserve-tomcat-port</id>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <portNames>
+                                <portName>tomcat.http.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
                 </executions>
+            </plugin>
+
+            <!-- Plugin for compiling the source of the project -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <!-- other annotation processors -->
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin for providing Spring Boot support in Maven -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${integration-tests.skip}</skip>
+                            <fork>false</fork>
+                            <profiles>
+                                <profile>it</profile>
+                            </profiles>
+                            <arguments>
+                                <argument>--server.port=${tomcat.http.port}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${integration-tests.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <app.name>${project.name}</app.name>
+                                <app.description>${project.description}</app.description>
+                                <app.version>${project.version}</app.version>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- JaCoCo plugin for generating test coverage reports -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <skip>${maven.test.skip}</skip>
+                </configuration>
+
+                <!-- Coverage by JUnit tests -->
+                <executions>
+                    <execution>
+                        <id>before-unit-test-execution</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</destFile>
+                            <propertyName>surefire.jacoco.args</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>after-unit-test-execution</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</dataFile>
+                            <outputDirectory>
+                                ${project.reporting.outputDirectory}/jacoco/jacoco-unit-test-coverage-report
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Coverage by integration tests -->
+                    <execution>
+                        <id>before-integration-test-execution</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-output/jacoco-integration-tests.exec</destFile>
+                            <propertyName>failsafe.jacoco.args</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>after-integration-test-execution</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-output/jacoco-integration-tests.exec</dataFile>
+                            <outputDirectory>
+                                ${project.reporting.outputDirectory}/jacoco/jacoco-integration-test-coverage-report
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Merging unit and integration test coverage data -->
+                    <execution>
+                        <id>merge-unit-and-integration</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}/jacoco-output/</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.build.directory}/jacoco-output/merged.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-merged-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-output/merged.exec</dataFile>
+                            <outputDirectory>
+                                ${project.reporting.outputDirectory}/jacoco/jacoco-merged-test-coverage-report
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Checks that the code coverage metrics are being met -->
+                    <execution>
+                        <id>check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <!--  Requires a line coverage minimum of 80% for every class except test classes -->
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>*Test</exclude>
+                                        <exclude>*IT</exclude>
+                                        <exclude>*Spec</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <!--											<minimum>80%</minimum>-->
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <dataFile>${project.build.directory}/jacoco-output/merged.exec</dataFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for generating JUnit tests reports during the test phase of the build lifecycle to execute the unit tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <skip>${junit-tests.skip}</skip>
+                    <argLine>${surefire.jacoco.args}</argLine>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Spec.java</include>
+                    </includes>
+                    <!-- excludes IT and ITSpec tests -->
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                        <exclude>**/*ITSpec.java</exclude>
+                    </excludes>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <!-- base directory where all reports are written to -->
+                    <reportsDirectory>${project.build.directory}/test-reports/unit</reportsDirectory>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin for generating integration tests reports during the verify phase of the build lifecycle to execute the integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <skip>${integration-tests.skip}</skip>
+                    <argLine>${failsafe.jacoco.args}</argLine>
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*ITSpec.java</include>
+                    </includes>
+                    <!-- base directory where all reports are written to -->
+                    <reportsDirectory>${project.build.directory}/test-reports/it</reportsDirectory>
+                    <summaryFile>${project.build.directory}/test-reports/it/failsafe-summary.xml</summaryFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for controlling certain environmental constraints such as Maven version, JDK version etc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[${maven-compiler-plugin.version},)</version>
+                                    <message>Invalid Maven version. It should, at least, be
+                                        ${maven-compiler-plugin.version}
+                                    </message>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[${java.version},)</version>
+                                    <message>Invalid Java version. It should, at least, be
+                                        ${java.version}
+                                    </message>
+                                </requireJavaVersion>
+                                <requireSameVersions>
+                                    <plugins>
+                                        <plugin>org.apache.maven.plugins:maven-surefire-plugin</plugin>
+                                        <plugin>org.apache.maven.plugins:maven-failsafe-plugin</plugin>
+                                    </plugins>
+                                </requireSameVersions>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for building Docker image -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib-maven-plugin.version}</version>
+                <configuration>
+                    <!-- Base image (OpenJDK 11) with digest specification -->
+                    <from>
+                        <image>${base.image.path}${base.image.digest}</image>
+                    </from>
+                    <to>
+                        <!-- Path to your Docker registry repository -->
+                        <image>${image.path}</image>
+                        <!-- Tags of the image -->
+                        <tags>
+                            <tag>${project.version}-b${build.number}</tag>
+                            <tag>latest</tag>
+                        </tags>
+                    </to>
+                    <container>
+                        <!-- Startup flags to be passed to the JVM -->
+                        <jvmFlags>
+                            <jvmFlag>-Xms512m</jvmFlag>
+                            <jvmFlag>-Xmx512m</jvmFlag>
+                            <jvmFlag>-Dfile.encoding=utf-8</jvmFlag>
+                            <!-- CircleCI env variables -->
+                            <jvmFlag>-Dcircle_build_num=${build.number}</jvmFlag>
+                            <jvmFlag>-Dcircle_commit=${commit.hash}</jvmFlag>
+                            <jvmFlag>-Dcircle_user=${build.user}</jvmFlag>
+                            <jvmFlag>-Dcircle_repo=${build.repo}</jvmFlag>
+                            <jvmFlag>-Dcircle_workflow_guid=${circle.workflow}</jvmFlag>
+                        </jvmFlags>
+                        <volumes>
+                            <volume>/tmp</volume>
+                        </volumes>
+                        <!-- Main class of the application -->
+                        <mainClass>${main-class}</mainClass>
+                        <!-- Non-root user -->
+                        <user>nobody</user>
+                        <!-- Image labeling -->
+                        <labels>
+                            <mvn.build.version>${project.version}</mvn.build.version>
+                        </labels>
+                    </container>
+                    <allowInsecureRegistries>true</allowInsecureRegistries>
+                </configuration>
+                <executions>
+                    <!-- Binding jib:build to package lifecycle -->
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for integration with GitHub -->
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>${site-maven-plugin.version}</version>
+                <configuration>
+                    <skip>${site-maven-plugin.skip}</skip>
+                    <!-- Git commit message -->
+                    <message>Maven artifacts for ${project.version}</message>
+                    <!-- Disable webpage processing -->
+                    <noJekyll>true</noJekyll>
+                    <!-- Matches distribution management repository url above -->
+                    <outputDirectory>${project.build.directory}/${github-staging-repo}</outputDirectory>
+                    <!-- Remote branch (that is used as Nexus OSS repo) name -->
+                    <branch>refs/heads/${github-staging-repo}</branch>
+                    <!-- If you remove this then the old artifact will be removed and new
+                          one will replace. But with the merge tag you can just release by changing the version -->
+                    <!--                    <merge>true</merge>-->
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <!-- GitHub repo name -->
+                    <repositoryName>${github.repo.name}</repositoryName>
+                    <!-- GitHub repo username  -->
+                    <repositoryOwner>${github.repo.username}</repositoryOwner>
+                </configuration>
+                <executions>
+                    <!-- Binding site-maven-plugin:site to deploy lifecycle -->
+                    <execution>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin for making project Release -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <!-- Path to the repo Tags folder -->
+                    <tagBase>https://github.com/${github.repo.username}/${github.repo.name}/tags</tagBase>
+                    <!-- Path to the repo Branches folder -->
+                    <branchBase>https://github.com/${github.repo.username}/${github.repo.name}/branches</branchBase>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <!-- Tasks to be run before creating tag -->
+                    <preparationGoals>clean verify</preparationGoals>
+                    <releaseProfiles>github</releaseProfiles>
+                    <!-- Commit message to be shown in the CircleCI job -->
+                    <scmCommentPrefix>[skip ci] Maven Release Plugin ${maven-release-plugin.version}-</scmCommentPrefix>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>mvnw</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin for generating yaml or json OpenAPI description during build time -->
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>${springdoc-openapi-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- The local url of json or yaml  -->
+                    <apiDocsUrl>http://localhost:${tomcat.http.port}/api/v3/api-docs</apiDocsUrl>
+                    <outputFileName>${project.artifactId}-openapi.yaml</outputFileName>
+                    <outputDir>${project.build.directory}</outputDir>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <!--
+    For artifact deployment in the nexus-repo branch of the GitHub repository
+    mvn deploy
+    -->
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/${github.repo.username}</url>
+        </repository>
+    </distributionManagement>
 </project>

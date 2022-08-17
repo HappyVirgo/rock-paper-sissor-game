@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 /**
  * Test configuration for integration tests with partial context loading.
@@ -24,6 +25,9 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
  */
 @TestConfiguration
 public class TestConfig {
+
+    @MockBean
+    GridFsTemplate gridFsTemplate;
 
     @MockBean
     MongoProperties mongoProperties;

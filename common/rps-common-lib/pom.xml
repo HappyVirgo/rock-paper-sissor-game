@@ -44,7 +44,7 @@
         <lombok.version>1.18.22</lombok.version>
         <swagger-annotations.version>2.1.12</swagger-annotations.version>
         <springdoc-openapi-ui.version>1.6.5</springdoc-openapi-ui.version>
-        <grpc.version>1.35.0</grpc.version>
+        <grpc.version>1.42.1</grpc.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <!-- Plugins -->
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>

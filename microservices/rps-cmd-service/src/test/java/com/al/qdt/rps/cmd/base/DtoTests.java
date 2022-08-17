@@ -8,6 +8,7 @@ import static com.al.qdt.common.enums.Hand.ROCK;
 import static com.al.qdt.common.enums.Hand.SCISSORS;
 import static com.al.qdt.common.enums.Player.USER;
 import static com.al.qdt.common.helpers.Constants.SUCCESS_MESSAGE;
+import static com.al.qdt.common.helpers.Constants.TEST_ID;
 
 public interface DtoTests {
 
@@ -43,6 +44,7 @@ public interface DtoTests {
      */
     default GameDto createGameDto(String username) {
         return GameDto.builder()
+                .id(TEST_ID)
                 .username(username)
                 .hand(ROCK.name())
                 .build();

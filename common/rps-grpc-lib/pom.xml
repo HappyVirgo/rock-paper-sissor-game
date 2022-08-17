@@ -33,7 +33,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Dependencies -->
-        <grpc.version>1.35.0</grpc.version>
+        <grpc.version>1.42.1</grpc.version>
         <protobuf.version>3.14.0</protobuf.version>
         <javax.annotation-api.version>1.2</javax.annotation-api.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>

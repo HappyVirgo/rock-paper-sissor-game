@@ -9,11 +9,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.UUID;
+
 @Mapper(config = CommonConfig.class)
 public interface GameDtoMapper {
 
     @Mapping(target = "hand", qualifiedByName = "handDtoToHandCommand")
     PlayGameCommand fromDto(GameDto gameDto);
+
+    UUID mapId(String value);
 
     @Named("handDtoToHandCommand")
     default Hand handDtoToHandCommand(String hand) {
