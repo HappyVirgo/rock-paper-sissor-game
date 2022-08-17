@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisplayName("Integration testing of the RpsKafkaProperties class")
 @Tag(value = "common")
 class RpsKafkaPropertiesIT extends AbstractIntegrationTest {
-    private static final int EXPECTED_MAX_IN_FLIGHT_REQUEST_PER_CONNECTION = 1;
+    private static final int EXPECTED_MAX_IN_FLIGHT_REQUEST_PER_CONNECTION = 5;
     private static final boolean IS_IDEMPOTENCE_ENABLED = true;
 
     @Autowired

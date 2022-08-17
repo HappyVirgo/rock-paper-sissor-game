@@ -5,6 +5,7 @@ import com.al.qdt.score.qry.domain.Score;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,5 +16,5 @@ public interface ScoreRepository extends JpaRepository<Score, UUID> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "DELETE FROM score s WHERE s.id = :id",
             nativeQuery = true)
-    void deleteById(UUID id);
+    void deleteById(@Param("id") UUID id);
 }
