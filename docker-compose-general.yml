@@ -3,13 +3,15 @@ version: "3.8"
 services:
   mongo:
     container_name: mongodb
-    image: mongo:latest
+    image: mongo:${MONGO_VERSION}
     hostname: ${MONGO_HOSTNAME}
     restart: always
     ports:
       - 27017:27017 # docker host port / container port
     expose:
       - 27017 # opens port 27017 on the container
+    env_file:
+      - .env
     environment:
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE} # the database
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME} # the database admin user
@@ -27,6 +29,8 @@ services:
     restart: always
     ports:
       - 8088:8081 # docker host port / container port
+    env_file:
+      - .env
     environment:
       - ME_CONFIG_MONGODB_SERVER=${ME_CONFIG_MONGODB_SERVER}
       - ME_CONFIG_MONGODB_AUTH_USERNAME=${ME_CONFIG_MONGODB_AUTH_USERNAME} # username for admin access
@@ -46,11 +50,13 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: bitnami/mariadb:latest
+    image: bitnami/mariadb:${MARIADB_VERSION}
     hostname: ${MARIADB_HOSTNAME}
     restart: always
     ports:
       - 3306:3306 # docker host port / container port
+    env_file:
+      - .env
     expose:
       - 3306 # opens port 3306 on the container
     environment:
@@ -68,6 +74,8 @@ services:
     image: adminer:latest
     ports:
       - 9080:8080 # docker host port / container port
+    env_file:
+      - .env
     networks:
       - ${BACKEND_NETWORK}
     deploy:
@@ -81,6 +89,8 @@ services:
     restart: always
     ports:
       - 6379:6379 # docker host port / container port
+    env_file:
+      - .env
     command: redis-server --save 20 1 --loglevel warning --protected-mode no --stop-writes-on-bgsave-error no
     environment:
       - REDIS_REPLICATION_MODE=master

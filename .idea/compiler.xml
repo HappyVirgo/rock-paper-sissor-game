@@ -3,27 +3,12 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for rps-microservices" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.4.2.Final/mapstruct-processor-1.4.2.Final.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.4.2.Final/mapstruct-1.4.2.Final.jar" />
-        </processorPath>
-        <module name="rps-qry-service" />
-        <module name="score-cmd-service" />
-        <module name="rps-common-lib" />
-        <module name="score-qry-service" />
-        <module name="rps-cmd-service" />
-      </profile>
       <profile name="Annotation profile for cqrs-es-framework" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
+          <entry name="$PROJECT_DIR$/../../../../../.m2/repository/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
         </processorPath>
         <module name="cqrs-es-framework" />
       </profile>
@@ -32,6 +17,21 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rps-grpc-lib" />
+        <module name="rps-qry-service" />
+        <module name="score-cmd-service" />
+        <module name="rps-cmd-service" />
+        <module name="score-qry-service" />
+      </profile>
+      <profile name="Annotation profile for rps-microservices" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../../../.m2/repository/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
+          <entry name="$PROJECT_DIR$/../../../../../.m2/repository/org/mapstruct/mapstruct-processor/1.4.2.Final/mapstruct-processor-1.4.2.Final.jar" />
+          <entry name="$PROJECT_DIR$/../../../../../.m2/repository/org/mapstruct/mapstruct/1.4.2.Final/mapstruct-1.4.2.Final.jar" />
+        </processorPath>
+        <module name="rps-common-lib" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11">

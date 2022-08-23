@@ -1,8 +1,8 @@
 server:
+  servlet:
+    context-path: /score-qry-api
   compression:
     enabled: true
-  servlet:
-    context-path: /api
   tomcat:
     threads:
       max: 100
@@ -112,11 +112,9 @@ api:
   dev:
     server:
       description: Dev server
-      base-url: http://localhost:8083${server.servlet.context-path}
   prod:
     server:
       description: Prod server
-      base-url: http://localhost:8080${server.servlet.context-path}
   endpoint-scores: scores
   version-one: /v1
   version-one-async: /v1.1

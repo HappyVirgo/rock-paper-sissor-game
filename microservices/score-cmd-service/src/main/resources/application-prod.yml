@@ -1,10 +1,10 @@
 server:
-  port: 8080
+  port: 8083
 
 # gRPC server configuration
 grpc:
   server:
-    port: 6565
+    port: 6568
     # Turn off the service listing (for both actuator and grpc)
     reflection-service-enabled: off
 
@@ -32,3 +32,12 @@ management:
       exposure:
         # exposed endpoints
         include: health, info, prometheus
+
+# OpenApi configuration
+api:
+  dev:
+    server:
+      base-url: http://localhost${server.servlet.context-path}
+  prod:
+    server:
+      base-url: http://localhost${server.servlet.context-path}

@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /api
+    context-path: /rps-cmd-api
 
 # gRPC client test configuration
 grpc:
@@ -38,7 +38,7 @@ api:
   dev:
     server:
       description: Dev server
-      base-url: http://localhost:8080${server.servlet.context-path}
+      base-url: http://localhost:8081${server.servlet.context-path}
   prod:
     server:
       description: Prod server

@@ -20,3 +20,12 @@ spring:
   kafka:
     producer:
       bootstrap-servers: localhost:9093,localhost:9094,localhost:9095
+
+# OpenApi configuration
+api:
+  dev:
+    server:
+      base-url: http://localhost:8081${server.servlet.context-path}
+  prod:
+    server:
+      base-url: http://localhost:8080${server.servlet.context-path}
