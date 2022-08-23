@@ -54,3 +54,12 @@ spring:
   # Cache configuration
   cache:
     type: simple
+
+# OpenApi configuration
+api:
+  dev:
+    server:
+      base-url: http://localhost:8082${server.servlet.context-path}
+  prod:
+    server:
+      base-url: http://localhost:8080${server.servlet.context-path}

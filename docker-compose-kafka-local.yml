@@ -1,6 +1,7 @@
 # We will create a kafka cluster
 # 3 kafka brokers at ports 9093, 9092 and 9093
 # 3 instances of zookeeper at port 2181, 2182 nad 2183
+# It should be run under dev profile only
 
 version: "3.8"
 
@@ -91,7 +92,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER} # allow to use the PLAINTEXT listener
     volumes:
       - kafka-1-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
-      - ~/infrastructure/kafka/mtls/kafka-1-creds:/etc/kafka/secrets
+      - ./infrastructure/kafka/mtls/kafka-1-creds:/etc/kafka/secrets
     depends_on:
       - zk-1
       - zk-2
@@ -121,7 +122,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER} # allow to use the PLAINTEXT listener
     volumes:
       - kafka-2-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
-      - ~/infrastructure/kafka/mtls/kafka-2-creds:/etc/kafka/secrets
+      - ./infrastructure/kafka/mtls/kafka-2-creds:/etc/kafka/secrets
     depends_on:
       - zk-1
       - zk-2
@@ -151,7 +152,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=${ALLOW_PLAINTEXT_LISTENER} # allow to use the PLAINTEXT listener
     volumes:
       - kafka-3-data:/var/lib/kafka/data # creating a volume to save Kafka data locally
-      - ~/infrastructure/kafka/mtls/kafka-3-creds:/etc/kafka/secrets
+      - ./infrastructure/kafka/mtls/kafka-3-creds:/etc/kafka/secrets
     depends_on:
       - zk-1
       - zk-2

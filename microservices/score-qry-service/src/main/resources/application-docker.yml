@@ -1,0 +1,70 @@
+server:
+  port: 8084
+
+# gRPC server configuration
+grpc:
+  server:
+    port: 6569
+    # Turn off the service listing (for both actuator and grpc)
+    reflection-service-enabled: off
+
+spring:
+  config:
+    location: classpath:/application-docker.yml
+  banner:
+    location: classpath:/docker/banner.txt
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    # allows Hibernate to generate SQL optimized for a particular DBMS
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
+
+  # MariaDB database connection configuration
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/scoreDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: 12345
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  # Flyway configuration
+  flyway:
+    url: jdbc:mariadb://mariadb:3306
+    user: root
+    password: 12345
+    schemas: scoreDB
+
+  # Kafka properties
+  kafka:
+    consumer:
+      bootstrap-servers: kafka-1:9093,kafka-2:9094,kafka-3:9095
+
+  # Cache configuration
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+  # Redis configuration
+  redis:
+    host: redis
+    password: 12345
+    port: 6379
+
+# Actuator configuration
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        # exposed endpoints
+        include: health, info, prometheus
+
+# OpenApi configuration
+api:
+  dev:
+    server:
+      base-url: http://localhost${server.servlet.context-path}
+  prod:
+    server:
+      base-url: http://localhost${server.servlet.context-path}

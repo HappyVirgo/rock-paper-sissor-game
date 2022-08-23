@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8084
   error:
     include-stacktrace: always
 
@@ -74,3 +74,12 @@ management:
 
 # Show bind values
 logging.level.org.hibernate.type.descriptor.sql: trace
+
+# OpenApi configuration
+api:
+  dev:
+    server:
+      base-url: http://localhost:8084${server.servlet.context-path}
+  prod:
+    server:
+      base-url: http://localhost:8080${server.servlet.context-path}

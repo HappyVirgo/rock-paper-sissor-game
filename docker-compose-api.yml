@@ -1,0 +1,108 @@
+version: "3.8"
+
+services:
+  # Nginx reverse proxy server acts as api gateway.
+  nginx:
+    container_name: nginx
+    image: nginx:${NGINX_VERSION}
+    hostname: ${NGINX_HOSTNAME}
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    restart: always
+    ports:
+      - 80:80 # NGINX HTTP, docker host port / container port
+#      - 443:443 # NGINX HTTPS, docker host port / container port
+    volumes:
+      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d
+      - ./infrastructure/ssl:/ssl
+    depends_on:
+      - rps-cmd-service
+      - rps-qry-service
+      - score-cmd-service
+      - score-qry-service
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
+  # The Rock Paper Scissors game command microservice provides REST and gRPC APIs for the RPS game.
+  rps-cmd-service:
+    container_name: rps-cmd-service
+    image: hokushin/rps-cmd-service:${RPS_CMD_SRV_VERSION}
+    hostname: ${RPS_CMD_SRV_HOSTNAME}
+    restart: always
+    ports:
+      - 8081:80 # docker host port / container port
+      - 6566:6565
+    networks:
+      - ${BACKEND_NETWORK}
+    depends_on:
+      - mongo
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    deploy:
+      replicas: 1
+
+  # The Rock Paper Scissors game query microservice provides REST and gRPC APIs for the RPS game.
+  rps-qry-service:
+    container_name: rps-qry-service
+    image: hokushin/rps-qry-service:${RPS_QRY_SRV_VERSION}
+    hostname: ${RPS_QRY_SRV_HOSTNAME}
+    restart: always
+    ports:
+      - 8082:80 # docker host port / container port
+      - 6567:6565
+    networks:
+      - ${BACKEND_NETWORK}
+    depends_on:
+      - mariadb
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    deploy:
+      replicas: 1
+
+  # The Score command microservice provides REST and gRPC APIs for the RPS game.
+  score-cmd-service:
+    container_name: score-cmd-service
+    image: hokushin/score-cmd-service:${SCORE_CMD_SRV_VERSION}
+    hostname: ${SCORE_CMD_SRV_HOSTNAME}
+    restart: always
+    ports:
+      - 8083:80 # docker host port / container port
+      - 6568:6565
+    networks:
+      - ${BACKEND_NETWORK}
+    depends_on:
+      - mongo
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    deploy:
+      replicas: 1
+
+  # The Score query microservice provides REST and gRPC APIs for the RPS game.
+  score-qry-service:
+    container_name: score-qry-service
+    image: hokushin/score-qry-service:${SCORE_QRY_SRV_VERSION}
+    hostname: ${SCORE_QRY_SRV_HOSTNAME}
+    restart: always
+    ports:
+      - 8084:80 # docker host port / container port
+      - 6569:6565
+    networks:
+      - ${BACKEND_NETWORK}
+    depends_on:
+      - mariadb
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    deploy:
+      replicas: 1
+
+# networks
+networks:
+  rps_net:
+    name: ${BACKEND_NETWORK}
