@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS SCORE;
+
+/* Create Score database table */
+CREATE TABLE SCORE
+(
+    ID      VARBINARY(16) NOT NULL,
+    WINNER  VARCHAR(255) NOT NULL,
+    VERSION INT,
+    PRIMARY KEY (ID)
+);

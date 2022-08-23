@@ -1,8 +1,8 @@
 server:
+  servlet:
+    context-path: /rps-cmd-api
   compression:
     enabled: true
-  servlet:
-    context-path: /api
   tomcat:
     threads:
       max: 100
@@ -88,11 +88,9 @@ api:
   dev:
     server:
       description: Dev server
-      base-url: http://localhost:8080${server.servlet.context-path}
   prod:
     server:
       description: Prod server
-      base-url: http://localhost:8080${server.servlet.context-path}
   endpoint-games: games
   endpoint-admin: admin
   version-one: /v1

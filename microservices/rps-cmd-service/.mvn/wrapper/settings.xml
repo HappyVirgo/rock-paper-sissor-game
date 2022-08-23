@@ -65,7 +65,7 @@
                 <!-- GitHub Packages Repository -->
                 <repository>
                     <id>github</id>
-                    <url>https://maven.pkg.github.com/hokushin118/rps-microservices
+                    <url>https://maven.pkg.github.com/hokushin118/rps
                     </url>
                     <snapshots>
                         <enabled>true</enabled>

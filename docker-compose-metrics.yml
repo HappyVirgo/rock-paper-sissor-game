@@ -9,6 +9,8 @@ services:
     restart: always
     ports:
       - 9090:9090 # docker host port / container port
+    env_file:
+      - .env
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
@@ -17,7 +19,7 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway # this is to allow a process inside the Docker container to see a process outsite
     volumes:
-      - ~/infrastructure/prometheus:/etc/prometheus
+      - ./infrastructure/prometheus:/etc/prometheus
       - prometheus-data:/etc/prometheus # creating a volume to save Prometheus data locally
     networks:
       - ${BACKEND_NETWORK}
@@ -33,12 +35,14 @@ services:
     user: "104" # setting up the user to use over the Docker container to allow reads/writes over disk
     ports:
       - 3000:3000 # docker host port / container port
+    env_file:
+      - .env
     environment:
       - GF_SECURITY_ADMIN_USER=${GF_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
-      - ~/infrastructure/grafana/provisioning:/etc/grafana/provisioning
+      - ./infrastructure/grafana/provisioning:/etc/grafana/provisioning
       - grafana-data:/var/lib/grafana # creating a volume to save Grafana data locally
     depends_on:
       - prometheus

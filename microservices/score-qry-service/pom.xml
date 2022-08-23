@@ -50,7 +50,6 @@
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <mockito.version>3.9.0</mockito.version>
-        <embed.mongo.version>3.2.6</embed.mongo.version>
         <grpc.version>1.42.1</grpc.version>
         <spock.version>2.1-M2-groovy-3.0</spock.version>
         <flyway-mysql.version>8.4.3</flyway-mysql.version>
@@ -118,8 +117,8 @@
                 <integration-tests.skip>false</integration-tests.skip>
                 <jib.skip>true</jib.skip>
                 <site-maven-plugin.skip>false</site-maven-plugin.skip>
+                <api-doc-url>localhost</api-doc-url>
             </properties>
-
             <build>
                 <plugins>
                     <!-- Plugin for deploying artifacts -->
@@ -147,6 +146,8 @@
                 <integration-tests.skip>true</integration-tests.skip>
                 <jib.skip>true</jib.skip>
                 <site-maven-plugin.skip>false</site-maven-plugin.skip>
+                <springdoc-openapi-maven-plugin.skip>true</springdoc-openapi-maven-plugin.skip>
+                <api-doc-url>score-qry-service</api-doc-url>
             </properties>
             <build>
                 <plugins>
@@ -175,6 +176,8 @@
                 <integration-tests.skip>true</integration-tests.skip>
                 <jib.skip>false</jib.skip>
                 <site-maven-plugin.skip>true</site-maven-plugin.skip>
+                <springdoc-openapi-maven-plugin.skip>true</springdoc-openapi-maven-plugin.skip>
+                <api-doc-url>localhost</api-doc-url>
             </properties>
             <build>
                 <plugins>
@@ -196,6 +199,8 @@
                 <integration-tests.skip>false</integration-tests.skip>
                 <jib.skip>true</jib.skip>
                 <site-maven-plugin.skip>false</site-maven-plugin.skip>
+                <springdoc-openapi-maven-plugin.skip>true</springdoc-openapi-maven-plugin.skip>
+                <api-doc-url>localhost</api-doc-url>
             </properties>
             <build>
                 <plugins>
@@ -217,6 +222,8 @@
                 <integration-tests.skip>true</integration-tests.skip>
                 <jib.skip>true</jib.skip>
                 <site-maven-plugin.skip>true</site-maven-plugin.skip>
+                <springdoc-openapi-maven-plugin.skip>true</springdoc-openapi-maven-plugin.skip>
+                <api-doc-url>localhost</api-doc-url>
             </properties>
             <build>
                 <plugins>
@@ -497,7 +504,6 @@
     <build>
         <!-- Final name of the artifact -->
         <finalName>${uberjar.name}</finalName>
-
         <plugins>
             <!-- Plugin for running Spock tests -->
             <plugin>
@@ -547,33 +553,12 @@
                 </executions>
             </plugin>
 
-            <!-- Plugin for compiling the source of the project -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <!-- other annotation processors -->
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-
             <!-- Plugin for providing Spring Boot support in Maven -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <mainClass>${main-class}</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -859,7 +844,6 @@
                         <image>${image.path}</image>
                         <!-- Tags of the image -->
                         <tags>
-                            <tag>${project.version}-b${build.number}</tag>
                             <tag>latest</tag>
                         </tags>
                     </to>
@@ -966,6 +950,13 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-maven-plugin</artifactId>
                 <version>${springdoc-openapi-maven-plugin.version}</version>
+                <configuration>
+                    <skip>${springdoc-openapi-maven-plugin.skip}</skip>
+                    <!-- The local url of json or yaml  -->
+                    <apiDocsUrl>http://${api-doc-url}:${tomcat.http.port}/api/v3/api-docs</apiDocsUrl>
+                    <outputFileName>${project.artifactId}-openapi.yaml</outputFileName>
+                    <outputDir>${project.build.directory}</outputDir>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
@@ -974,12 +965,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <!-- The local url of json or yaml  -->
-                    <apiDocsUrl>http://localhost:${tomcat.http.port}/api/v3/api-docs</apiDocsUrl>
-                    <outputFileName>${project.artifactId}-openapi.yaml</outputFileName>
-                    <outputDir>${project.build.directory}</outputDir>
-                </configuration>
             </plugin>
         </plugins>
     </build>

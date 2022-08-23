@@ -10,9 +10,9 @@ import spock.lang.Title
 class RpsApiPropertiesITSpec extends AbstractIntegration {
     static final LICENSE_NAME = 'The GNU General Public License, Version 3'
     static final LICENSE_URL = 'https://www.gnu.org/licenses/gpl-3.0.txt'
-    static final DEV_SERVER_BASE_URL = 'http://localhost:8082/api'
+    static final DEV_SERVER_BASE_URL = 'http://localhost:8083/score-cmd-api'
     static final DEV_SERVER_DESCRIPTION = 'Dev server'
-    static final PROD_SERVER_BASE_URL = 'http://localhost:8080/api'
+    static final PROD_SERVER_BASE_URL = 'http://localhost:8080/score-cmd-api'
     static final PROD_SERVER_DESCRIPTION = 'Prod server'
 
     @Subject

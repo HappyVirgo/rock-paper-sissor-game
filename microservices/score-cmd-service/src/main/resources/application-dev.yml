@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
   error:
     include-stacktrace: always
 
@@ -36,3 +36,12 @@ management:
   endpoint:
     health:
       show-details: always
+
+# OpenApi configuration
+api:
+  dev:
+    server:
+      base-url: http://localhost:8083${server.servlet.context-path}
+  prod:
+    server:
+      base-url: http://localhost:8080${server.servlet.context-path}

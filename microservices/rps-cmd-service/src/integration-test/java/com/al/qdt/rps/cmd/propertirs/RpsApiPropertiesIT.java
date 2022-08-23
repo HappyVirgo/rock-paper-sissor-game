@@ -16,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class RpsApiPropertiesIT extends AbstractIntegrationTest {
     private static final String LICENSE_NAME = "The GNU General Public License, Version 3";
     private static final String LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.txt";
-    private static final String DEV_SERVER_BASE_URL = "http://localhost:8080/api";
+    private static final String DEV_SERVER_BASE_URL = "http://localhost:8081/rps-cmd-api";
     private static final String DEV_SERVER_DESCRIPTION = "Dev server";
-    private static final String PROD_SERVER_BASE_URL = "http://localhost:8080/api";
+    private static final String PROD_SERVER_BASE_URL = "http://localhost:8080/rps-cmd-api";
     private static final String PROD_SERVER_DESCRIPTION = "Prod server";
 
     @Autowired

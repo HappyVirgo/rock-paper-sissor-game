@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS GAME;
+
+/* Create Game database table */
+CREATE TABLE GAME
+(
+    ID       VARBINARY(16) NOT NULL,
+    USERNAME VARCHAR(50) NOT NULL,
+    HAND     VARCHAR (255) NOT NULL,
+    VERSION  INT,
+    PRIMARY KEY (ID)
+);
