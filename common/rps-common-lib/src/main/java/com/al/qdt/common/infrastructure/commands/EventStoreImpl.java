@@ -1,7 +1,7 @@
 package com.al.qdt.common.infrastructure.commands;
 
-import com.al.qdt.common.mongo.domain.Event;
-import com.al.qdt.common.mongo.repositories.EventRepository;
+import com.al.qdt.common.infrastructure.mongo.domain.Event;
+import com.al.qdt.common.infrastructure.mongo.repositories.EventRepository;
 import com.al.qdt.cqrs.events.BaseEvent;
 import com.al.qdt.cqrs.exceptions.AggregateException;
 import com.al.qdt.cqrs.exceptions.AggregateNotFoundException;

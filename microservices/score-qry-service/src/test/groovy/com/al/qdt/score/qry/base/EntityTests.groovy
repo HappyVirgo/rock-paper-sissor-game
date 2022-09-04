@@ -1,7 +1,7 @@
 package com.al.qdt.score.qry.base
 
 import com.al.qdt.common.enums.Player
-import com.al.qdt.score.qry.domain.Score
+import com.al.qdt.score.qry.domain.entities.Score
 
 import static com.al.qdt.common.helpers.Constants.TEST_UUID_TWO
 import static com.al.qdt.common.enums.Player.USER

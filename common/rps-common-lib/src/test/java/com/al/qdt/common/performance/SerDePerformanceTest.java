@@ -1,8 +1,8 @@
 package com.al.qdt.common.performance;
 
-import com.al.qdt.common.base.DtoTests;
-import com.al.qdt.common.base.ProtoTests;
-import com.al.qdt.common.dto.GameDto;
+import com.al.qdt.common.domain.base.DtoTests;
+import com.al.qdt.common.domain.base.ProtoTests;
+import com.al.qdt.common.api.dto.GameDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;

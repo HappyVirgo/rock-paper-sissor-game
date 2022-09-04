@@ -9,6 +9,7 @@ The Rock Paper Scissors game project provides infrastructure, REST and gRPC APIs
 
 ### Prerequisites
 
+* Docker Desktop
 * Java 11 or higher
 
 ### Technology stack
@@ -79,13 +80,13 @@ to activate it.
   deploy necessary infrastructure on docker containers in the background.
 
 ```
-     > docker compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml -f docker-compose-api.yml up -d
+     > docker compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-api.yml up -d
 ```
 
 * Verify that all necessary infrastructure and metrics containers are up and running.
 
 ```
-    > docker compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml -f docker-compose-api ps
+    > docker compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-api ps
 ```
 
 ### 3. Building of the necessary common libraries
@@ -162,7 +163,8 @@ to activate it.
 * Open any browser and navigate to the microservice Open API 3.0 definition (REST API).
 
 ```
-  http://localhost:8081/rps-cmd-api/swagger-ui/index.html
+  http://localhost:8081/rps-cmd-api/swagger-ui/index.html or
+  http://host.docker.internal/rps-cmd-api/swagger-ui/index.html
 ```
 Note: NGINX is used as API gateway so if you deploy the microservices on docker containers you should remove port number from the url.
 ### 5. Running the RPS game query microservice from the command line
@@ -198,7 +200,8 @@ Note: NGINX is used as API gateway so if you deploy the microservices on docker 
 * Open any browser and navigate to the microservice Open API 3.0 definition (REST API).
 
 ```
-  http://localhost:8082/rps-qry-api/swagger-ui/index.html
+  http://localhost:8082/rps-qry-api/swagger-ui/index.html or
+  http://host.docker.internal/rps-qry-api/swagger-ui/index.html
 ```
 
 ### 6. Running the Score command microservice from the command line
@@ -233,7 +236,8 @@ Note: NGINX is used as API gateway so if you deploy the microservices on docker 
 * Open any browser and navigate to the microservice Open API 3.0 definition (REST API).
 
 ```
-  http://localhost:8083/score-cmd-api/swagger-ui/index.html
+  http://localhost:8083/score-cmd-api/swagger-ui/index.html or
+  http://host.docker.internal/score-cmd-api/swagger-ui/index.html
 ```
 
 ### 7. Running the Score query microservice from the command line
@@ -268,7 +272,8 @@ Note: NGINX is used as API gateway so if you deploy the microservices on docker 
 * Open any browser and navigate to the microservice Open API 3.0 definition (REST API).
 
 ```
-  http://localhost:8084/score-qry-api/swagger-ui/index.html
+  http://localhost:8084/score-qry-api/swagger-ui/index.html  or
+  http://host.docker.internal/score-qry-api/swagger-ui/index.html
 ```
 
 ### Useful links
@@ -295,10 +300,15 @@ To get an idea of HTTP/2 performance, you can follow the link below:
 
 ### Microservice patterns used
 
+* [Domain Driven Design (DDD)](https://en.wikipedia.org/wiki/Domain-driven_design)
 * [Command Query Responsibility Segregation (CQRS)](https://microservices.io/patterns/data/cqrs.html)
 * [Event sourcing (ES)](https://microservices.io/patterns/data/event-sourcing.html)
 * [API Gateway](https://microservices.io/patterns/apigateway.html)
+* [Gateway routing](https://docs.microsoft.com/en-us/azure/architecture/patterns/gateway-routing)
+* [Gateway offloading](https://docs.microsoft.com/en-us/azure/architecture/patterns/gateway-offloading)
 * [Database per service](https://microservices.io/patterns/data/database-per-service.html)
+* [Polyglot persistence](https://martinfowler.com/bliki/PolyglotPersistence.html)
+* [Bounded context](https://martinfowler.com/bliki/BoundedContext.html)
 * [Domain event](https://microservices.io/patterns/data/domain-event.html)
 * [Service instance per container](https://microservices.io/patterns/deployment/service-per-container.html)
 * [Health Check API](https://microservices.io/patterns/observability/health-check-api.html)

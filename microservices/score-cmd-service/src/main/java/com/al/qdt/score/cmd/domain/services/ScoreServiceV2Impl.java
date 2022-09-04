@@ -1,0 +1,24 @@
+package com.al.qdt.score.cmd.domain.services;
+
+import com.al.qdt.cqrs.infrastructure.CommandDispatcher;
+import com.al.qdt.score.cmd.api.commands.DeleteScoreCommand;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ScoreServiceV2Impl implements ScoreServiceV2 {
+    private final CommandDispatcher commandDispatcher;
+
+    @Override
+    public void deleteById(UUID id) {
+        log.info("SERVICE: Deleting scores by id: {}.", id.toString());
+        this.commandDispatcher.send(DeleteScoreCommand.builder()
+                .id(id)
+                .build());
+    }
+}

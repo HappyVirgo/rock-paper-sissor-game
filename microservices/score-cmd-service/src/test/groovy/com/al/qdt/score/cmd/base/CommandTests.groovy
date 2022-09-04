@@ -1,6 +1,6 @@
 package com.al.qdt.score.cmd.base
 
-import com.al.qdt.score.cmd.commands.DeleteScoreCommand
+import com.al.qdt.score.cmd.api.commands.DeleteScoreCommand
 
 trait CommandTests {
 

@@ -21,9 +21,11 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  # Disables MongoDB auto-configuration
   autoconfigure:
-    # Excluding MongoDB
-    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration, org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 
   jmx:
     enabled: false

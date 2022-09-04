@@ -4,7 +4,9 @@ The Rock Paper Scissors game command microservice provides REST and gRPC APIs fo
 
 ### Prerequisites
 
+* Docker Desktop
 * Java 11 or higher
+* (Optional) IntelliJ IDEA
 
 ### Technology stack
 

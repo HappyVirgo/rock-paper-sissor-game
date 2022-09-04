@@ -1,12 +1,14 @@
 package com.al.qdt.rps.qry.base;
 
 import com.al.qdt.common.enums.Hand;
-import com.al.qdt.rps.qry.domain.Game;
+import com.al.qdt.rps.qry.domain.entities.Game;
 
 import java.util.UUID;
 
 import static com.al.qdt.common.enums.Hand.ROCK;
-import static com.al.qdt.common.helpers.Constants.*;
+import static com.al.qdt.common.helpers.Constants.TEST_UUID_TWO;
+import static com.al.qdt.common.helpers.Constants.USERNAME_ONE;
+import static com.al.qdt.common.helpers.Constants.USERNAME_TWO;
 
 public interface EntityTests {
 

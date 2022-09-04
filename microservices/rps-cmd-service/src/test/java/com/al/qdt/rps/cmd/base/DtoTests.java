@@ -1,8 +1,8 @@
 package com.al.qdt.rps.cmd.base;
 
-import com.al.qdt.common.dto.BaseResponseDto;
-import com.al.qdt.common.dto.GameDto;
-import com.al.qdt.common.dto.GameResponseDto;
+import com.al.qdt.common.api.dto.BaseResponseDto;
+import com.al.qdt.common.api.dto.GameDto;
+import com.al.qdt.common.api.dto.GameResponseDto;
 
 import static com.al.qdt.common.enums.Hand.ROCK;
 import static com.al.qdt.common.enums.Hand.SCISSORS;

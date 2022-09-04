@@ -1,10 +1,10 @@
 package com.al.qdt.score.qry;
 
 import com.al.qdt.cqrs.infrastructure.QueryDispatcher;
-import com.al.qdt.score.qry.handlers.QueryHandler;
-import com.al.qdt.score.qry.queries.FindAllScoresQuery;
-import com.al.qdt.score.qry.queries.FindScoreByIdQuery;
-import com.al.qdt.score.qry.queries.FindScoresByWinnerQuery;
+import com.al.qdt.score.qry.api.queries.FindAllScoresQuery;
+import com.al.qdt.score.qry.api.queries.FindScoreByIdQuery;
+import com.al.qdt.score.qry.api.queries.FindScoresByWinnerQuery;
+import com.al.qdt.score.qry.infrastructure.handlers.QueryHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -26,8 +26,12 @@ public class ScoreQryServiceApp {
         SpringApplication.run(ScoreQryServiceApp.class, args);
     }
 
+    /**
+     * Registering queries to appropriate handlers.
+     */
     @PostConstruct
     public void registerHandlers() {
+        // Queries. These queries return a result and do not change the state of the system, and they are free of side effects.
         this.queryDispatcher.registerHandler(FindAllScoresQuery.class, this.queryHandler::handle);
         this.queryDispatcher.registerHandler(FindScoreByIdQuery.class, this.queryHandler::handle);
         this.queryDispatcher.registerHandler(FindScoresByWinnerQuery.class, this.queryHandler::handle);

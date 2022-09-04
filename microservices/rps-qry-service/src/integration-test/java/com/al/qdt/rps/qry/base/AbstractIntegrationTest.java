@@ -1,8 +1,8 @@
 package com.al.qdt.rps.qry.base;
 
 import com.al.qdt.rps.qry.RpsQryServiceApp;
-import com.al.qdt.rps.qry.config.GrpcInProcessConfig;
-import com.al.qdt.rps.qry.config.TestConfig;
+import com.al.qdt.rps.qry.infrastructure.config.GrpcInProcessConfig;
+import com.al.qdt.rps.qry.infrastructure.config.TestConfig;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
