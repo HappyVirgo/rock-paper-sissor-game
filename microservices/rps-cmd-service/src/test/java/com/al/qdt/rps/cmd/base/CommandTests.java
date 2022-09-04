@@ -2,10 +2,10 @@ package com.al.qdt.rps.cmd.base;
 
 import com.al.qdt.common.enums.Hand;
 import com.al.qdt.common.enums.Player;
-import com.al.qdt.rps.cmd.commands.AddScoreCommand;
-import com.al.qdt.rps.cmd.commands.DeleteGameCommand;
-import com.al.qdt.rps.cmd.commands.PlayGameCommand;
-import com.al.qdt.rps.cmd.commands.RestoreDbCommand;
+import com.al.qdt.rps.cmd.api.commands.AddScoreCommand;
+import com.al.qdt.rps.cmd.api.commands.DeleteGameCommand;
+import com.al.qdt.rps.cmd.api.commands.PlayGameCommand;
+import com.al.qdt.rps.cmd.api.commands.RestoreDbCommand;
 
 import java.util.UUID;
 

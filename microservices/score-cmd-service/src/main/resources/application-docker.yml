@@ -27,17 +27,19 @@ spring:
 # Actuator configuration
 management:
   endpoints:
-    enabled-by-default: false
     web:
       exposure:
-        # exposed endpoints
-        include: health, info, prometheus
+        # exposing all endpoints
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 # OpenApi configuration
 api:
   dev:
     server:
-      base-url: http://localhost${server.servlet.context-path}
+      base-url: http://host.docker.internal${server.servlet.context-path}
   prod:
     server:
-      base-url: http://localhost${server.servlet.context-path}
+      base-url: http://host.docker.internal${server.servlet.context-path}

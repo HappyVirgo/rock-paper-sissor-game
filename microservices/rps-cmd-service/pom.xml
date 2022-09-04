@@ -806,7 +806,7 @@
                         <mainClass>${main-class}</mainClass>
                         <!-- Non-root user -->
                         <user>nobody</user>
-                        <!-- Image labeling -->
+                enu        <!-- Image labeling -->
                         <labels>
                             <mvn.build.version>${project.version}</mvn.build.version>
                         </labels>

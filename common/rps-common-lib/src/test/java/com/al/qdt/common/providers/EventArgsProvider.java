@@ -1,6 +1,6 @@
 package com.al.qdt.common.providers;
 
-import com.al.qdt.common.base.EventTests;
+import com.al.qdt.common.domain.base.EventTests;
 import com.al.qdt.common.events.rps.GameDeletedEvent;
 import com.al.qdt.common.events.rps.GamePlayedEvent;
 import com.al.qdt.common.events.score.ScoresAddedEvent;

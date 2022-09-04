@@ -1,6 +1,6 @@
 package com.al.qdt.common.events;
 
-import com.al.qdt.common.base.AbstractTest;
+import com.al.qdt.common.domain.base.AbstractTest;
 import com.al.qdt.common.providers.EventArgsProvider;
 import com.al.qdt.cqrs.events.BaseEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;

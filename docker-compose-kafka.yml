@@ -2,6 +2,10 @@
 # 3 kafka brokers at ports 9093, 9092 and 9093
 # 3 instances of zookeeper at port 2181, 2182 nad 2183
 # It should be run under docker profile only
+# Notes: In a production environment, the infrastructure assets such as databases,
+# cache, and message brokers should be offloaded from the orchestrator and deployed
+# into high available systems for infrastructure, like cloud platforms (AWS, Azure, Google Cloud etc),
+# or any HA clustering solution on-premises.
 
 version: "3.8"
 
@@ -11,8 +15,8 @@ services:
     image: bitnami/zookeeper:${ZOOKEEPER_VERSION}
     hostname: ${ZOOKEEPER_HOSTNAME_1}
     restart: always
-    ports:
-      - 2181:2181 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 2181:2181 # external port / container port
     environment:
       - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_1}
       - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT_1}
@@ -33,8 +37,8 @@ services:
     image: bitnami/zookeeper:${ZOOKEEPER_VERSION}
     hostname: ${ZOOKEEPER_HOSTNAME_2}
     restart: always
-    ports:
-      - 2182:2181 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 2182:2181 # external port / container port
     environment:
       - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_2}
       - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT_2}
@@ -55,8 +59,8 @@ services:
     image: bitnami/zookeeper:${ZOOKEEPER_VERSION}
     hostname: ${ZOOKEEPER_HOSTNAME_3}
     restart: always
-    ports:
-      - 2183:2181 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 2183:2181 # external port / container port
     environment:
       - ZOOKEEPER_SERVER_ID=${ZOOKEEPER_SERVER_ID_3}
       - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT_3}
@@ -77,8 +81,8 @@ services:
     image: bitnami/kafka:${KAFKA_VERSION}
     hostname: ${KAFKA_HOSTNAME_1}
     restart: always
-    ports:
-      - 9093:9093 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 9093:9093 # external port / container port
     environment:
       - KAFKA_CFG_BROKER_ID=${KAFKA_BROKER_ID_1}
       - KAFKA_CFG_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1},${ZOOKEEPER_HOSTNAME_2}:${ZOOKEEPER_CLIENT_PORT_2},${ZOOKEEPER_HOSTNAME_3}:${ZOOKEEPER_CLIENT_PORT_3}
@@ -107,8 +111,8 @@ services:
     image: bitnami/kafka:${KAFKA_VERSION}
     hostname: ${KAFKA_HOSTNAME_2}
     restart: always
-    ports:
-      - 9094:9094 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 9094:9094 # external port / container port
     environment:
       - KAFKA_CFG_BROKER_ID=${KAFKA_BROKER_ID_2}
       - KAFKA_CFG_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1},${ZOOKEEPER_HOSTNAME_2}:${ZOOKEEPER_CLIENT_PORT_2},${ZOOKEEPER_HOSTNAME_3}:${ZOOKEEPER_CLIENT_PORT_3}
@@ -137,8 +141,8 @@ services:
     image: bitnami/kafka:${KAFKA_VERSION}
     hostname: ${KAFKA_HOSTNAME_3}
     restart: always
-    ports:
-      - 9095:9095 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 9095:9095 # external port / container port
     environment:
       - KAFKA_CFG_BROKER_ID=${KAFKA_BROKER_ID_3}
       - KAFKA_CFG_ZOOKEEPER_CONNECT=${ZOOKEEPER_HOSTNAME_1}:${ZOOKEEPER_CLIENT_PORT_1},${ZOOKEEPER_HOSTNAME_2}:${ZOOKEEPER_CLIENT_PORT_2},${ZOOKEEPER_HOSTNAME_3}:${ZOOKEEPER_CLIENT_PORT_3}
@@ -182,7 +186,6 @@ volumes:
     driver: local
   kafka-3-data:
     driver: local
-
 
 # networks
 networks:

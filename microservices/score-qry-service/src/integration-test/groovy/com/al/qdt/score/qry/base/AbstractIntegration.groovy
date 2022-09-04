@@ -1,8 +1,8 @@
 package com.al.qdt.score.qry.base
 
 import com.al.qdt.score.qry.ScoreQryServiceApp
-import com.al.qdt.score.qry.domain.Score
-import com.al.qdt.score.qry.repositories.ScoreRepository
+import com.al.qdt.score.qry.domain.entities.Score
+import com.al.qdt.score.qry.domain.repositories.ScoreRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc

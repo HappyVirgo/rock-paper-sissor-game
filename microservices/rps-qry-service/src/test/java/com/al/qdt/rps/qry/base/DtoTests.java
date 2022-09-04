@@ -1,6 +1,6 @@
 package com.al.qdt.rps.qry.base;
 
-import com.al.qdt.common.dto.GameDto;
+import com.al.qdt.common.api.dto.GameDto;
 
 import static com.al.qdt.common.enums.Hand.ROCK;
 

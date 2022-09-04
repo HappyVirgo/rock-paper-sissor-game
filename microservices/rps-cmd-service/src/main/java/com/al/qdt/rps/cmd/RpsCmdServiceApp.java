@@ -1,11 +1,11 @@
 package com.al.qdt.rps.cmd;
 
 import com.al.qdt.cqrs.infrastructure.CommandDispatcher;
-import com.al.qdt.rps.cmd.commands.AddScoreCommand;
-import com.al.qdt.rps.cmd.commands.DeleteGameCommand;
-import com.al.qdt.rps.cmd.commands.PlayGameCommand;
-import com.al.qdt.rps.cmd.commands.RestoreDbCommand;
-import com.al.qdt.rps.cmd.handlers.CommandHandler;
+import com.al.qdt.rps.cmd.api.commands.AddScoreCommand;
+import com.al.qdt.rps.cmd.api.commands.DeleteGameCommand;
+import com.al.qdt.rps.cmd.api.commands.PlayGameCommand;
+import com.al.qdt.rps.cmd.api.commands.RestoreDbCommand;
+import com.al.qdt.rps.cmd.infrastructure.handlers.CommandHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -26,8 +26,12 @@ public class RpsCmdServiceApp {
         SpringApplication.run(RpsCmdServiceApp.class, args);
     }
 
+    /**
+     * Registering commands to appropriate handlers.
+     */
     @PostConstruct
     public void registerHandlers() {
+        // Commands. These commands change the state of a system.
         this.commandDispatcher.registerHandler(PlayGameCommand.class, this.commandHandler::handle);
         this.commandDispatcher.registerHandler(AddScoreCommand.class, this.commandHandler::handle);
         this.commandDispatcher.registerHandler(DeleteGameCommand.class, this.commandHandler::handle);

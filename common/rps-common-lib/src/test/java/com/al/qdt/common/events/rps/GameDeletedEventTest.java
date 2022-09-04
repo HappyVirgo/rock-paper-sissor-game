@@ -1,6 +1,6 @@
 package com.al.qdt.common.events.rps;
 
-import com.al.qdt.common.base.EventTests;
+import com.al.qdt.common.domain.base.EventTests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.SneakyThrows;
 import org.json.JSONException;

@@ -1,6 +1,6 @@
 package com.al.qdt.common.providers;
 
-import com.al.qdt.common.base.ProtoTests;
+import com.al.qdt.common.domain.base.ProtoTests;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;

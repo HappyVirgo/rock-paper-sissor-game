@@ -6,7 +6,7 @@ services:
     image: mongo:${MONGO_VERSION}
     hostname: ${MONGO_HOSTNAME}
     restart: always
-    ports:
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
       - 27017:27017 # docker host port / container port
     expose:
       - 27017 # opens port 27017 on the container
@@ -27,8 +27,8 @@ services:
     container_name: mongo-express
     image: mongo-express:latest
     restart: always
-    ports:
-      - 8088:8081 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 8088:8081 # external port / container port
     env_file:
       - .env
     environment:
@@ -53,8 +53,8 @@ services:
     image: bitnami/mariadb:${MARIADB_VERSION}
     hostname: ${MARIADB_HOSTNAME}
     restart: always
-    ports:
-      - 3306:3306 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 3306:3306 # external port / container port
     env_file:
       - .env
     expose:
@@ -72,8 +72,8 @@ services:
   adminer:
     container_name: adminer
     image: adminer:latest
-    ports:
-      - 9080:8080 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 9080:8080 # external port / container port
     env_file:
       - .env
     networks:
@@ -87,8 +87,8 @@ services:
     image: bitnami/redis:latest
     hostname: ${REDIS_HOSTNAME}
     restart: always
-    ports:
-      - 6379:6379 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 6379:6379 # external port / container port
     env_file:
       - .env
     command: redis-server --save 20 1 --loglevel warning --protected-mode no --stop-writes-on-bgsave-error no

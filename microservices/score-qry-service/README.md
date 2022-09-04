@@ -4,7 +4,9 @@ The Score query microservice provides REST and gRPC APIs for the Rock Paper Scis
 
 ### Prerequisites
 
+* Docker Desktop
 * Java 11 or higher
+* (Optional) IntelliJ IDEA
 
 ### Technology stack
 

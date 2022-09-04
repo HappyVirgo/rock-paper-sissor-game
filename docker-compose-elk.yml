@@ -7,9 +7,9 @@ services:
     image: elasticsearch:${ELASTIC_VERSION}
     hostname: ${ELASTIC_HOSTNAME}
     restart: always
-    ports:
-      - 9200:9200 # Elasticsearch HTTP, docker host port / container port
-      - 9300:9300 # Elasticsearch TCP transport, docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 9200:9200 # Elasticsearch HTTP, external port / container port
+      - 9300:9300 # Elasticsearch TCP transport, external port / container port
     env_file:
       - .env
     environment:
@@ -22,7 +22,8 @@ services:
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       - discovery.type=single-node
     volumes:
-      - ./infrastructure/elasticsearch/elasticsearch.yml:/etc/elasticsearch/config/elasticsearch.yml
+      #      - ./infrastructure/elk/elasticsearch/config/elasticsearch.yml:/etc/elasticsearch/config/elasticsearch.yml
+      - ./infrastructure/elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
       - elasticsearch-data:/usr/share/elasticsearch/data # Persistence data
     networks:
       - ${BACKEND_NETWORK}
@@ -35,18 +36,19 @@ services:
     image: logstash:${ELASTIC_VERSION}
     hostname: ${LOGSTASH_HOSTNAME}
     restart: always
-    ports:
-      - 5044:5044 # Logstash Beats input
-      - 50000:50000/tcp
-      - 50000:50000/udp
-      - 9600:9600
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 5044:5044 # Logstash Beats input, external port / container port
+      - 50000:50000/tcp # external port / container port
+      - 50000:50000/udp # external port / container port
+      - 9600:9600 # external port / container port
     env_file:
       - .env
     environment:
       - LS_JAVA_OPTS=-Xms256m -Xmx256m
       - LOGSTASH_INTERNAL_PASSWORD=${LOGSTASH_INTERNAL_PASSWORD}
     volumes:
-      - ./infrastructure/logstash:/etc/logstash # Pipeline configuration
+      - ./infrastructure/elk/logstash/pipeline:/usr/share/logstash/pipeline # Pipeline configuration
+      - ./infrastructure/elk/logstash/config:/usr/share/logstash/config
     depends_on:
       - elasticsearch
     networks:
@@ -60,14 +62,14 @@ services:
     image: kibana:${ELASTIC_VERSION}
     hostname: ${KIBANA_HOSTNAME}
     restart: always
-    ports:
-      - 5601:5601 # docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 5601:5601 # external port / container port
     env_file:
       - .env
     environment:
       - KIBANA_SYSTEM_PASSWORD=${KIBANA_SYSTEM_PASSWORD}
     volumes:
-      - ./infrastructure/kibana/config:/etc/kibana/config
+      - ./infrastructure/elk/kibana/config:/usr/share/kibana/config
     depends_on:
       - elasticsearch
     networks:
@@ -84,7 +86,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./infrastructure/filebeat:/etc/filebeat  # Configuration file
+      - ./infrastructure/elk/filebeat:/etc/filebeat  # Configuration file
       - /var/lib/docker/containers:/var/lib/docker/containers    # Docker logs
       - /var/run/docker.sock:/var/run/docker.sock                # Additional information about containers
       - filebeat-data:/usr/share/filebeat/data                 # Persistence data

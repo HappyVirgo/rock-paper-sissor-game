@@ -1,6 +1,6 @@
 package com.al.qdt.common.events;
 
-import com.al.qdt.common.base.AbstractTest;
+import com.al.qdt.common.domain.base.AbstractTest;
 import com.al.qdt.common.providers.EventArgsProvider;
 import com.al.qdt.cqrs.events.BaseEvent;
 import lombok.SneakyThrows;
@@ -39,7 +39,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static com.al.qdt.common.helpers.Constants.*;
+import static com.al.qdt.common.helpers.Constants.EXECUTION_EXCEPTION_MESSAGE;
+import static com.al.qdt.common.helpers.Constants.INPUT_TOPIC_PREFIX;
+import static com.al.qdt.common.helpers.Constants.INTERRUPTION_EXCEPTION_MESSAGE;
+import static com.al.qdt.common.helpers.Constants.POLLING_INTERVAL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

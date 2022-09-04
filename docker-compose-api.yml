@@ -10,11 +10,11 @@ services:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
     restart: always
-    ports:
-      - 80:80 # NGINX HTTP, docker host port / container port
-#      - 443:443 # NGINX HTTPS, docker host port / container port
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 80:80 # NGINX HTTP, external port / container port
+    #      - 443:443 # NGINX HTTPS, external port / container port
     volumes:
-      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d
+      - ./infrastructure/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - ./infrastructure/ssl:/ssl
     depends_on:
       - rps-cmd-service
@@ -32,9 +32,9 @@ services:
     image: hokushin/rps-cmd-service:${RPS_CMD_SRV_VERSION}
     hostname: ${RPS_CMD_SRV_HOSTNAME}
     restart: always
-    ports:
-      - 8081:80 # docker host port / container port
-      - 6566:6565
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 8081:80 # external port / container port
+      - 6566:6565 # external port / container port
     networks:
       - ${BACKEND_NETWORK}
     depends_on:
@@ -51,9 +51,9 @@ services:
     image: hokushin/rps-qry-service:${RPS_QRY_SRV_VERSION}
     hostname: ${RPS_QRY_SRV_HOSTNAME}
     restart: always
-    ports:
-      - 8082:80 # docker host port / container port
-      - 6567:6565
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 8082:80 # external port / container port
+      - 6567:6565 # external port / container port
     networks:
       - ${BACKEND_NETWORK}
     depends_on:
@@ -70,9 +70,9 @@ services:
     image: hokushin/score-cmd-service:${SCORE_CMD_SRV_VERSION}
     hostname: ${SCORE_CMD_SRV_HOSTNAME}
     restart: always
-    ports:
-      - 8083:80 # docker host port / container port
-      - 6568:6565
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 8083:80 # external port / container port
+      - 6568:6565 # external port / container port
     networks:
       - ${BACKEND_NETWORK}
     depends_on:
@@ -89,9 +89,9 @@ services:
     image: hokushin/score-qry-service:${SCORE_QRY_SRV_VERSION}
     hostname: ${SCORE_QRY_SRV_HOSTNAME}
     restart: always
-    ports:
-      - 8084:80 # docker host port / container port
-      - 6569:6565
+    ports: # Important: In a production environment you should remove the external port that kept here for debugging purposes.
+      - 8084:80 # external port / container port
+      - 6569:6565 # external port / container port
     networks:
       - ${BACKEND_NETWORK}
     depends_on:
@@ -99,6 +99,27 @@ services:
       - kafka-1
       - kafka-2
       - kafka-3
+    deploy:
+      replicas: 1
+
+  # The WebStatus application monitors microservices health
+  webstatus:
+    container_name: webstatus
+    hostname: webstatus
+    build:
+      context: .
+      dockerfile: ./docker/webstatus/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - HealthChecksUI__HealthChecks__0__Name=RPS Game Command Microservice Health Check
+      - HealthChecksUI__HealthChecks__0__Uri=http://host.docker.internal/rps-cmd-api/actuator/health
+      - 50880:80 # external port / container port
+    networks:
+      - ${BACKEND_NETWORK}
+    depends_on:
+      - nginx
     deploy:
       replicas: 1
 

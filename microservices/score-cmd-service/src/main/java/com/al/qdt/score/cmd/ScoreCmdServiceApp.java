@@ -1,8 +1,8 @@
 package com.al.qdt.score.cmd;
 
 import com.al.qdt.cqrs.infrastructure.CommandDispatcher;
-import com.al.qdt.score.cmd.commands.DeleteScoreCommand;
-import com.al.qdt.score.cmd.handlers.CommandHandler;
+import com.al.qdt.score.cmd.api.commands.DeleteScoreCommand;
+import com.al.qdt.score.cmd.infrastructure.handlers.CommandHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -23,8 +23,12 @@ public class ScoreCmdServiceApp {
         SpringApplication.run(ScoreCmdServiceApp.class, args);
     }
 
+    /**
+     * Registering commands to appropriate handlers.
+     */
     @PostConstruct
     public void registerHandlers() {
+        // Commands. These commands change the state of a system.
         this.commandDispatcher.registerHandler(DeleteScoreCommand.class, this.commandHandler::handle);
     }
 

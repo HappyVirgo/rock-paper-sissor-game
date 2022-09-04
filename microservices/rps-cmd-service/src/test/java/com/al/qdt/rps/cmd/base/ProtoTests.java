@@ -5,8 +5,6 @@ import com.al.qdt.rps.grpc.v1.common.Hand;
 import com.al.qdt.rps.grpc.v1.dto.GameDto;
 import com.al.qdt.rps.grpc.v1.dto.GameResultDto;
 import com.al.qdt.rps.grpc.v1.services.GameRequest;
-import com.google.protobuf.Message;
-import org.springframework.http.converter.protobuf.ProtobufJsonFormatHttpMessageConverter;
 
 import static com.al.qdt.common.helpers.Constants.SUCCESS_MESSAGE;
 import static com.al.qdt.common.helpers.Constants.USERNAME_ONE;
