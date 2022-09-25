@@ -88,7 +88,15 @@ to activate it.
 ```
     > docker compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-api ps
 ```
+* Navigate to the health checker microservice:
 
+```
+    > localhost/status/hc-ui
+```
+and make sure that all the RPS game microservices are up and running.
+
+![health-checks](img/hc.png)
+* Note: status gets refreshed every 10 seconds
 ### 3. Building of the necessary common libraries
 
 * Navigate to the common/rps-grpc-lib directory on your computer.

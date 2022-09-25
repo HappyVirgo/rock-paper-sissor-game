@@ -26,6 +26,30 @@ services:
     deploy:
       replicas: 1
 
+  # The WebStatus application monitors microservices health
+  webstatus:
+    container_name: webstatus
+    build:
+      context: .
+      dockerfile: ./docker/webstatus/Dockerfile
+    hostname: webstatus
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Logging:LogLevel:Default=Debug
+      - Logging:Loglevel:Microsoft=Warning
+      - Logging:LogLevel:HealthChecks=Debug
+      - HealthChecksUI__HealthChecks__0__Name=Rock Paper Scissors Game
+      - HealthChecksUI__HealthChecks__0__Uri=http://host.docker.internal/status/hc
+    ports:
+      - 5000:5000 # external port / container port
+    depends_on:
+      - nginx
+    networks:
+      - ${BACKEND_NETWORK}
+    deploy:
+      replicas: 1
+
   # The Rock Paper Scissors game command microservice provides REST and gRPC APIs for the RPS game.
   rps-cmd-service:
     container_name: rps-cmd-service
@@ -99,27 +123,6 @@ services:
       - kafka-1
       - kafka-2
       - kafka-3
-    deploy:
-      replicas: 1
-
-  # The WebStatus application monitors microservices health
-  webstatus:
-    container_name: webstatus
-    hostname: webstatus
-    build:
-      context: .
-      dockerfile: ./docker/webstatus/Dockerfile
-    restart: always
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - HealthChecksUI__HealthChecks__0__Name=RPS Game Command Microservice Health Check
-      - HealthChecksUI__HealthChecks__0__Uri=http://host.docker.internal/rps-cmd-api/actuator/health
-      - 50880:80 # external port / container port
-    networks:
-      - ${BACKEND_NETWORK}
-    depends_on:
-      - nginx
     deploy:
       replicas: 1
 

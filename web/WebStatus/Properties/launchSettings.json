@@ -1,27 +1,29 @@
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5107/",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:62618/",
+      "sslPort": 44318
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "hc-ui",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "WebStatus": {
+    "HealthChecks.UIAndApi": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "hc-ui",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:50880"
+      }
     }
   }
 }
