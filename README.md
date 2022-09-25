@@ -96,7 +96,7 @@ to activate it.
 and make sure that all the RPS game microservices are up and running.
 
 ![health-checks](img/hc.png)
-* Note: status gets refreshed every 10 seconds
+** Status gets refreshed every 10 seconds
 ### 3. Building of the necessary common libraries
 
 * Navigate to the common/rps-grpc-lib directory on your computer.

@@ -6,11 +6,11 @@ namespace WebStatus;
 
 public class Startup
 {
-    const string RpsCmdServicePath = "rps-cmd-api";
-    const string RpsQryServicePath = "rps-qry-api";
-    const string ScoreCmdServicePath = "score-cmd-api";
-    const string ScoreQryServicePath = "score-qry-api";
-    const string DockerBaseUrl = "http://host.docker.internal";
+    private const string RpsCmdServicePath = "rps-cmd-api";
+    private const string RpsQryServicePath = "rps-qry-api";
+    private const string ScoreCmdServicePath = "score-cmd-api";
+    private const string ScoreQryServicePath = "score-qry-api";
+    private const string DockerBaseUrl = "http://host.docker.internal";
 
     public IEnumerable<string> ApiTags { get; } = new[] { "api", "rest", "grpc" };
 

@@ -36,3 +36,6 @@ If we navigate to the:
 we should see a health checker user interface below:
 
 ![health-checks](../../img/hc.png)
+** Status gets refreshed every 10 seconds
+### Useful Links
+* [Enterprise HealthChecks for ASP.NET Core Diagnostics Package](https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks)
