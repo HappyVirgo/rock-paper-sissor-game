@@ -22,3 +22,17 @@ The Health check microservice provides health monitoring of the RPS game microse
 ```
      > docker compose -f docker-compose-general.yml -f docker-compose-kafka.yml -f docker-compose-metrics.yml -f docker-compose-elk.yml -f docker-compose-api.yml up -d
 ```
+### Health Checker endpoint
+If we navigate to the:
+```
+     > localhost/status/hc
+```
+we should see the RPS game microservices health check information in the json format.
+### Health Checker UI
+If we navigate to the:
+```
+     > localhost/status/hc-ui 
+```
+we should see a health checker user interface below:
+
+![health-checks](../../img/hc.png)

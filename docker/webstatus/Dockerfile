@@ -27,5 +27,6 @@ WORKDIR /app
 
 COPY --from=publish /app .
 
+ENV ASPNETCORE_URLS http://*:5000
 # Webstatus app init
 ENTRYPOINT ["dotnet", "WebStatus.dll"]
